@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Cleanliness Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .controls input, .controls select, .controls button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .controls button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .controls button:hover {
+            background: #5568d3;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid;
+        }
+        
+        .stat-card.excellent {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .stat-card.good {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        .stat-card.fair {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .stat-card.poor {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .stat-card.pending {
+            background: #e2e3e5;
+            border-color: #6c757d;
+            color: #383d41;
+        }
+        
+        .stat-card.avg {
+            background: #e7e3fc;
+            border-color: #6f42c1;
+            color: #3d2465;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+        }
+        
+        th {
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 11px;
+            color: #333;
+            font-weight: bold;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        select, input[type="number"], input[type="time"], input[type="text"] {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            width: 100%;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        .status-excellent {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-good {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .status-fair {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .status-poor {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status-pending {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .area-name {
+            font-weight: 500;
+            color: #333;
+            min-width: 180px;
+        }
+        
+        .staff-diff-positive {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .staff-diff-negative {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .staff-diff-zero {
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                overflow-x: auto;
+            }
+            
+            table {
+                min-width: 1400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Airport Cleanliness Dashboard</h1>
+            <p>Comprehensive Daily Inspection & Staff Deployment Monitoring System</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>📅 Date</label>
+                    <input type="date" id="dateInput" />
+                </div>
+                <div class="control-group">
+                    <label>🕐 Shift</label>
+                    <select id="shiftInput">
+                        <option value="Morning">Morning (6 AM - 2 PM)</option>
+                        <option value="Evening">Evening (2 PM - 10 PM)</option>
+                        <option value="Night">Night (10 PM - 6 AM)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>⏰ Inspection Time</label>
+                    <input type="time" id="inspectionTime" />
+                </div>
+                <div class="control-group">
+                    <label>👤 Inspector Name</label>
+                    <input type="text" id="inspectorName" placeholder="Enter name" />
+                </div>
+                <div class="control-group button-group">
+                    <button onclick="exportToCSV()">📥 Export CSV</button>
+                    <button onclick="printReport()">🖨️ Print</button>
+                    <button onclick="resetAll()">🔄 Reset</button>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card excellent">
+                    <div class="stat-label">EXCELLENT</div>
+                    <div class="stat-value" id="stat-excellent">0</div>
+                </div>
+                <div class="stat-card good">
+                    <div class="stat-label">GOOD</div>
+                    <div class="stat-value" id="stat-good">0</div>
+                </div>
+                <div class="stat-card fair">
+                    <div class="stat-label">FAIR</div>
+                    <div class="stat-value" id="stat-fair">0</div>
+                </div>
+                <div class="stat-card poor">
+                    <div class="stat-label">POOR</div>
+                    <div class="stat-value" id="stat-poor">0</div>
+                </div>
+                <div class="stat-card pending">
+                    <div class="stat-label">PENDING</div>
+                    <div class="stat-value" id="stat-pending">22</div>
+                </div>
+                <div class="stat-card avg">
+                    <div class="stat-label">AVG SCORE</div>
+                    <div class="stat-value" id="stat-avg">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🛫 Operational Areas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Score (%)</th>
+                        <th>Deep Clean Req.</th>
+                        <th>Routine Clean</th>
+                        <th>Manpower Req.</th>
+                        <th>Material Req.</th>
+                        <th>Stated Staff</th>
+                        <th>Actual Staff</th>
+                        <th>Difference</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="operational"></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🌍 International Arrival</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Score (%)</th>
+                        <th>Deep Clean Req.</th>
+                        <th>Routine Clean</th>
+                        <th>Manpower Req.</th>
+                        <th>Material Req.</th>
+                        <th>Stated Staff</th>
+                        <th>Actual Staff</th>
+                        <th>Difference</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="international"></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🏠 Domestic Arrival</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Score (%)</th>
+                        <th>Deep Clean Req.</th>
+                        <th>Routine Clean</th>
+                        <th>Manpower Req.</th>
+                        <th>Material Req.</th>
+                        <th>Stated Staff</th>
+                        <th>Actual Staff</th>
+                        <th>Difference</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="domestic"></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🏛️ Concourse Hall</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Score (%)</th>
+                        <th>Deep Clean Req.</th>
+                        <th>Routine Clean</th>
+                        <th>Manpower Req.</th>
+                        <th>Material Req.</th>
+                        <th>Stated Staff</th>
+                        <th>Actual Staff</th>
+                        <th>Difference</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="concourse"></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🚗 Parking & Roads</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Score (%)</th>
+                        <th>Deep Clean Req.</th>
+                        <th>Routine Clean</th>
+                        <th>Manpower Req.</th>
+                        <th>Material Req.</th>
+                        <th>Stated Staff</th>
+                        <th>Actual Staff</th>
+                        <th>Difference</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="parking"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        var areas = [
+            { id: 1, name: "Apron", category: "operational" },
+            { id: 2, name: "Apron Toilets", category: "operational" },
+            { id: 3, name: "Int Arr", category: "international" },
+            { id: 4, name: "Int Arr - Gents Toilet", category: "international" },
+            { id: 5, name: "Int Arr - Ladies Toilet", category: "international" },
+            { id: 6, name: "Dom Arr", category: "domestic" },
+            { id: 7, name: "Dom Arr - Gents Toilet", category: "domestic" },
+            { id: 8, name: "Dom Arr - Ladies Toilet", category: "domestic" },
+            { id: 9, name: "Con Hall", category: "concourse" },
+            { id: 10, name: "Con Hall North - Ladies Toilet", category: "concourse" },
+            { id: 11, name: "Con Hall North - Gents Toilet", category: "concourse" },
+            { id: 12, name: "Con Hall South - Ladies Toilet", category: "concourse" },
+            { id: 13, name: "Con Hall South - Gents Toilet", category: "concourse" },
+            { id: 14, name: "Parking", category: "parking" },
+            { id: 15, name: "Parking Toilets South - Ladies", category: "parking" },
+            { id: 16, name: "Parking Toilets South - Gents", category: "parking" },
+            { id: 17, name: "Parking Toilets North - Ladies", category: "parking" },
+            { id: 18, name: "Parking Toilets North - Gents", category: "parking" },
+            { id: 19, name: "Entry Road", category: "parking" },
+            { id: 20, name: "Exit Road", category: "parking" },
+            { id: 21, name: "Cargo Road", category: "parking" },
+            { id: 22, name: "Mess Road", category: "parking" }
+        ];
+
+        // Set defaults
+        document.getElementById('dateInput').valueAsDate = new Date();
+        var now = new Date();
+        document.getElementById('inspectionTime').value = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+        function calculateDifference(areaId) {
+            var stated = parseInt(document.getElementById('stated-' + areaId).value) || 0;
+            var actual = parseInt(document.getElementById('actual-' + areaId).value) || 0;
+            var diff = actual - stated;
+            var diffCell = document.getElementById('diff-' + areaId);
+            
+            if (diff > 0) {
+                diffCell.textContent = '+' + diff;
+                diffCell.className = 'staff-diff-positive';
+            } else if (diff < 0) {
+                diffCell.textContent = diff;
+                diffCell.className = 'staff-diff-negative';
+            } else {
+                diffCell.textContent = '0';
+                diffCell.className = 'staff-diff-zero';
+            }
+        }
+
+        // Create table rows
+        areas.forEach(function(area) {
+            var tbody = document.getElementById(area.category);
+            var row = document.createElement('tr');
+            row.innerHTML = '<td class="area-name">' + area.name + '</td>' +
+                '<td><select id="status-' + area.id + '" onchange="updateStats()">' +
+                '<option value="pending">Pending</option>' +
+                '<option value="excellent">Excellent</option>' +
+                '<option value="good">Good</option>' +
+                '<option value="fair">Fair</option>' +
+                '<option value="poor">Poor</option>' +
+                '</select></td>' +
+                '<td><input type="number" id="score-' + area.id + '" min="0" max="100" value="0" onchange="updateStats()" /></td>' +
+                '<td><select id="deepclean-' + area.id + '">' +
+                '<option value="No">No</option>' +
+                '<option value="Yes">Yes</option>' +
+                '</select></td>' +
+                '<td><select id="routine-' + area.id + '">' +
+                '<option value="Yes">Yes</option>' +
+                '<option value="No">No</option>' +
+                '</select></td>' +
+                '<td><input type="number" id="manpower-' + area.id + '" min="0" value="0" placeholder="0" /></td>' +
+                '<td><input type="text" id="material-' + area.id + '" placeholder="Items needed" /></td>' +
+                '<td><input type="number" id="stated-' + area.id + '" min="0" value="0" onchange="calculateDifference(' + area.id + ')" /></td>' +
+                '<td><input type="number" id="actual-' + area.id + '" min="0" value="0" onchange="calculateDifference(' + area.id + ')" /></td>' +
+                '<td><span id="diff-' + area.id + '" class="staff-diff-zero">0</span></td>' +
+                '<td><input type="text" id="notes-' + area.id + '" placeholder="Add notes..." /></td>';
+            tbody.appendChild(row);
+        });
+
+        function updateStats() {
+            var stats = { excellent: 0, good: 0, fair: 0, poor: 0, pending: 0 };
+            var totalScore = 0;
+
+            areas.forEach(function(area) {
+                var status = document.getElementById('status-' + area.id).value;
+                var score = parseInt(document.getElementById('score-' + area.id).value) || 0;
+                var select = document.getElementById('status-' + area.id);
+                
+                stats[status]++;
+                totalScore += score;
+
+                select.className = 'status-' + status;
+            });
+
+            document.getElementById('stat-excellent').textContent = stats.excellent;
+            document.getElementById('stat-good').textContent = stats.good;
+            document.getElementById('stat-fair').textContent = stats.fair;
+            document.getElementById('stat-poor').textContent = stats.poor;
+            document.getElementById('stat-pending').textContent = stats.pending;
+            document.getElementById('stat-avg').textContent = (totalScore / areas.length).toFixed(1) + '%';
+        }
+
+        function exportToCSV() {
+            var date = document.getElementById('dateInput').value;
+            var shift = document.getElementById('shiftInput').value;
+            var time = document.getElementById('inspectionTime').value;
+            var inspector = document.getElementById('inspectorName').value;
+            
+            var csv = 'Airport Cleanliness Report\n';
+            csv += 'Date,' + date + '\n';
+            csv += 'Shift,' + shift + '\n';
+            csv += 'Inspection Time,' + time + '\n';
+            csv += 'Inspector,' + inspector + '\n\n';
+            csv += 'Area,Category,Status,Score,Deep Clean Required,Routine Cleaning,Manpower Required,Material Required,Stated Staff,Actual Staff,Staff Difference,Notes\n';
+            
+            areas.forEach(function(area) {
+                var status = document.getElementById('status-' + area.id).value;
+                var score = document.getElementById('score-' + area.id).value;
+                var deepclean = document.getElementById('deepclean-' + area.id).value;
+                var routine = document.getElementById('routine-' + area.id).value;
+                var manpower = document.getElementById('manpower-' + area.id).value;
+                var material = document.getElementById('material-' + area.id).value.replace(/,/g, ';');
+                var stated = document.getElementById('stated-' + area.id).value;
+                var actual = document.getElementById('actual-' + area.id).value;
+                var diff = document.getElementById('diff-' + area.id).textContent;
+                var notes = document.getElementById('notes-' + area.id).value.replace(/,/g, ';');
+                
+                csv += '"' + area.name + '","' + area.category + '","' + status + '",' + score + ',' + deepclean + ',' + routine + ',' + manpower + ',"' + material + '",' + stated + ',' + actual + ',' + diff + ',"' + notes + '"\n';
+            });
+
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'cleanliness-report-' + date + '-' + shift + '.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        function resetAll() {
+            if (confirm('Are you sure you want to reset all data?')) {
+                areas.forEach(function(area) {
+                    document.getElementById('status-' + area.id).value = 'pending';
+                    document.getElementById('score-' + area.id).value = '0';
+                    document.getElementById('deepclean-' + area.id).value = 'No';
+                    document.getElementById('routine-' + area.id).value = 'Yes';
+                    document.getElementById('manpower-' + area.id).value = '0';
+                    document.getElementById('material-' + area.id).value = '';
+                    document.getElementById('stated-' + area.id).value = '0';
+                    document.getElementById('actual-' + area.id).value = '0';
+                    document.getElementById('diff-' + area.id).textContent = '0';
+                    document.getElementById('diff-' + area.id).className = 'staff-diff-zero';
+                    document.getElementById('notes-' + area.id).value = '';
+                });
+                updateStats();
+            }
+        }
+
+        // Initialize stats
+        updateStats();
+    </script>
+</body>
+</html>
