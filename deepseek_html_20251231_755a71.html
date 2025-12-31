@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airport Cleanliness - Offline</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+        }
+        .offline-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-icon">📶</div>
+    <h1>You're Offline</h1>
+    <p>The Airport Cleanliness app requires an internet connection to sync data.</p>
+    <p>Your local data is saved and will sync when you're back online.</p>
+    <button onclick="location.reload()">Try Again</button>
+</body>
+</html>

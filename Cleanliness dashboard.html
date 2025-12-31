@@ -2,6 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA Essential Meta Tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Airport Clean">
+    <meta name="application-name" content="Airport Clean">
+    
+    <!-- Theme Colors -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-TileImage" content="/icon-144.png">
+    
+    <title>Airport Cleanliness</title>
+    
+    <!-- Manifest with absolute path -->
+    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+    
+    <!-- Apple Touch Icons (required for iOS) -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/icon-57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/icon-72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/icon-76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/icon-114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png">
+    <link rel="shortcut icon" href="/icon-32.png">
+    
+    <style>
+        /* Your existing CSS remains the same */
+        /* ... */
+    </style>
+</head>
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- PWA Essentials -->
@@ -436,5 +477,170 @@
 
         init();
     </script>
+    <!-- PWA Installation Handler -->
+<script>
+// PWA Installation Logic
+let deferredPrompt;
+const installContainer = document.createElement('div');
+installContainer.id = 'pwa-install-container';
+installContainer.innerHTML = `
+    <div style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+        z-index: 9999;
+        border-radius: 20px 20px 0 0;
+        text-align: center;
+    ">
+        <h3 style="margin: 0 0 10px 0; color: #2563eb;">📱 Install Airport Cleanliness App</h3>
+        <p style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">
+            Install for better experience, works offline & loads faster
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="pwa-install-btn" style="
+                background: linear-gradient(90deg, #16a34a, #22c55e);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                flex: 1;
+                max-width: 200px;
+            ">
+                Install App
+            </button>
+            <button id="pwa-dismiss-btn" style="
+                background: #f3f4f6;
+                color: #6b7280;
+                border: 2px solid #e5e7eb;
+                padding: 12px 24px;
+                border-radius: 25px;
+                font-weight: bold;
+                cursor: pointer;
+                flex: 1;
+                max-width: 200px;
+            ">
+                Not Now
+            </button>
+        </div>
+    </div>
+`;
+
+// Only show install prompt if not already installed
+if (!window.matchMedia('(display-mode: standalone)').matches) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install prompt after 5 seconds
+        setTimeout(() => {
+            if (deferredPrompt && !localStorage.getItem('pwaDismissed')) {
+                document.body.appendChild(installContainer);
+                
+                document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+                    installContainer.remove();
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                });
+                
+                document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
+                    installContainer.remove();
+                    localStorage.setItem('pwaDismissed', 'true');
+                    deferredPrompt = null;
+                });
+            }
+        }, 5000);
+    });
+}
+
+// Detect if app is already installed
+window.addEventListener('appinstalled', () => {
+    console.log('PWA installed successfully');
+    if (installContainer.parentNode) {
+        installContainer.remove();
+    }
+    deferredPrompt = null;
+    
+    // Track installation
+    localStorage.setItem('pwaInstalled', 'true');
+});
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(registration => {
+                console.log('ServiceWorker registration successful:', registration);
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    console.log('ServiceWorker update found:', newWorker);
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New update available
+                            showUpdateNotification();
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.log('ServiceWorker registration failed:', error);
+            });
+    });
+}
+
+function showUpdateNotification() {
+    const updateDiv = document.createElement('div');
+    updateDiv.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2563eb;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            z-index: 9999;
+            max-width: 300px;
+        ">
+            <p style="margin: 0 0 10px 0; font-weight: bold;">
+                🔄 Update Available
+            </p>
+            <p style="margin: 0 0 10px 0; font-size: 14px;">
+                New version of Airport Cleanliness is available
+            </p>
+            <button onclick="location.reload()" style="
+                background: white;
+                color: #2563eb;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-weight: bold;
+                cursor: pointer;
+                width: 100%;
+            ">
+                Reload to Update
+            </button>
+        </div>
+    `;
+    document.body.appendChild(updateDiv);
+    
+    setTimeout(() => {
+        if (updateDiv.parentNode) {
+            updateDiv.remove();
+        }
+    }, 10000);
+}
+</script>
 </body>
 </html>
