@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- PWA Essentials -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Airport Cleanliness">
+    <meta name="application-name" content="Airport Cleanliness">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    
+    <title>Airport Cleanliness</title>
+    
+    <!-- Regular manifest file (NOT data URL) -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple icons -->
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="icon-192.png">
+    
+    <style>
+        /* Your existing CSS remains exactly the same */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .bg-gradient { background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); }
+        .bg-blue-gradient { background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); }
+        .container { min-height: 100vh; padding-bottom: 80px; }
+        .header { background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); color: white; padding: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .header h1 { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+        .header p { font-size: 12px; opacity: 0.9; }
+        .content { padding: 16px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 16px; margin-bottom: 12px; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 4px; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .btn-group { display: flex; gap: 8px; margin-top: 16px; }
+        .btn { flex: 1; padding: 10px 12px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-green { background: #16a34a; color: white; }
+        .btn-blue { background: #2563eb; color: white; }
+        .btn-red { background: #dc2626; color: white; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .stat-card { background: white; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .stat-card.excellent { background: #16a34a; color: white; }
+        .stat-card.good { background: #2563eb; color: white; }
+        .stat-card.fair { background: #eab308; color: white; }
+        .stat-card.poor { background: #dc2626; color: white; }
+        .stat-card.pending { background: #6b7280; color: white; }
+        .stat-card.avg { background: #4f46e5; color: white; }
+        .stat-label { font-size: 11px; opacity: 0.9; margin-bottom: 4px; }
+        .stat-value { font-size: 24px; font-weight: bold; }
+        .section { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 12px; overflow: hidden; }
+        .section-header { background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%); color: white; padding: 16px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .section-content { padding: 12px; display: none; }
+        .section-content.active { display: block; }
+        .location-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+        .location-title { font-weight: 600; color: #1f2937; font-size: 14px; margin-bottom: 12px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .checkbox-group { display: flex; gap: 12px; margin-bottom: 8px; }
+        .checkbox-label { display: flex; align-items: center; font-size: 12px; }
+        .checkbox-label input { margin-right: 4px; }
+        .status-excellent { background: #16a34a; }
+        .status-good { background: #2563eb; }
+        .status-fair { background: #eab308; }
+        .status-poor { background: #dc2626; }
+        .status-pending { background: #6b7280; }
+        select.status { color: white; font-weight: 600; }
+        .diff-positive { background: #dcfce7; color: #166534; }
+        .diff-negative { background: #fee2e2; color: #991b1b; }
+        .diff-neutral { background: #f3f4f6; color: #6b7280; }
+        .diff-display { padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-align: center; }
+        @media print { .no-print { display: none !important; } }
+        .icon { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
+        
+        /* Install Button */
+        #installBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        #installBtn:hover { transform: translateY(-2px); }
+        #installBtn:active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div class="container bg-gradient">
+        <div class="header">
+            <h1>✈️ Airport Cleanliness</h1>
+            <p>Daily Inspection & Monitoring</p>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <div class="input-group">
+                    <label>📅 Date</label>
+                    <input type="date" id="date" />
+                </div>
+                <div class="input-group">
+                    <label>🕐 Shift</label>
+                    <select id="shift">
+                        <option value="">Select Shift</option>
+                        <option value="morning">Morning (8 AM - 2 PM)</option>
+                        <option value="evening">Evening (2 PM - 8 PM)</option>
+                        <option value="night">Night (8 PM - 8 AM)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>⏰ Time</label>
+                    <input type="time" id="time" />
+                </div>
+                <div class="input-group">
+                    <label>👤 Inspector</label>
+                    <input type="text" id="inspector" placeholder="Enter inspector name" />
+                </div>
+                <div class="btn-group no-print">
+                    <button class="btn btn-green" onclick="exportCSV()">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        CSV
+                    </button>
+                    <button class="btn btn-blue" onclick="window.print()">
+                        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Print
+                    </button>
+                    <button class="btn btn-red" onclick="resetAll()">
+                        <svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="stats">
+                <div class="stat-card excellent">
+                    <div class="stat-label">EXCELLENT</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card good">
+                    <div class="stat-label">GOOD</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card fair">
+                    <div class="stat-label">FAIR</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card poor">
+                    <div class="stat-label">POOR</div>
+                    <div class="stat-value">0</div>
+                </div>
+                <div class="stat-card pending">
+                    <div class="stat-label">PENDING</div>
+                    <div class="stat-value">30</div>
+                </div>
+                <div class="stat-card avg">
+                    <div class="stat-label">AVG SCORE</div>
+                    <div class="stat-value">0%</div>
+                </div>
+            </div>
+
+            <div id="sections"></div>
+        </div>
+        
+        <!-- Install Button -->
+        <button id="installBtn">
+            📱 Install App
+        </button>
+    </div>
+
+    <script>
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'flex';
+            
+            setTimeout(() => {
+                installBtn.style.display = 'flex';
+            }, 3000);
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                installBtn.textContent = '✅ Installed!';
+                installBtn.disabled = true;
+                setTimeout(() => {
+                    installBtn.style.display = 'none';
+                }, 2000);
+            }
+            
+            deferredPrompt = null;
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+            deferredPrompt = null;
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Your existing app logic continues...
+        const areas = [
+            { id: 'operational', name: '🛫 Operational Areas', locations: ['Check-in Counters', 'Security Check Area', 'Departure Gates', 'Baggage Claim', 'Immigration Counters', 'Customs Area'] },
+            { id: 'international', name: '🌍 International Arrival', locations: ['Arrival Hall', 'Baggage Belts', 'Immigration Queue', 'Customs Exit', 'Meet & Greet Area', 'Washrooms'] },
+            { id: 'domestic', name: '🏠 Domestic Arrival', locations: ['Arrival Terminal', 'Baggage Collection', 'Exit Gates', 'Waiting Area', 'Information Desk', 'Washrooms'] },
+            { id: 'concourse', name: '🏛️ Concourse Hall', locations: ['Main Concourse', 'Retail Areas', 'Food Courts', 'Seating Areas', 'Escalators/Elevators', 'Walkways'] },
+            { id: 'parking', name: '🚗 Parking & Roads', locations: ['Parking Lot A', 'Parking Lot B', 'Access Roads', 'Drop-off Zone', 'Pickup Zone', 'Service Roads'] }
+        ];
+
+        let data = {};
+
+        function init() {
+            // Load saved data
+            const saved = localStorage.getItem('inspectionData');
+            if (saved) {
+                data = JSON.parse(saved);
+            } else {
+                areas.forEach(area => {
+                    area.locations.forEach(loc => {
+                        const key = `${area.id}-${loc}`;
+                        data[key] = { status: 'pending', score: '', deepClean: false, routineClean: false, manpower: '', material: '', statedStaff: '', actualStaff: '', notes: '' };
+                    });
+                });
+            }
+
+            // Load form data
+            document.getElementById('date').value = localStorage.getItem('date') || new Date().toISOString().split('T')[0];
+            document.getElementById('shift').value = localStorage.getItem('shift') || '';
+            document.getElementById('time').value = localStorage.getItem('time') || '';
+            document.getElementById('inspector').value = localStorage.getItem('inspector') || '';
+
+            renderSections();
+            updateStats();
+
+            // Auto-save on input
+            document.getElementById('date').addEventListener('change', e => { localStorage.setItem('date', e.target.value); });
+            document.getElementById('shift').addEventListener('change', e => { localStorage.setItem('shift', e.target.value); });
+            document.getElementById('time').addEventListener('change', e => { localStorage.setItem('time', e.target.value); });
+            document.getElementById('inspector').addEventListener('input', e => { localStorage.setItem('inspector', e.target.value); });
+        }
+
+        function renderSections() {
+            const container = document.getElementById('sections');
+            container.innerHTML = areas.map(area => `
+                <div class="section">
+                    <div class="section-header" onclick="toggleSection('${area.id}')">
+                        <span>${area.name}</span>
+                        <svg class="icon" id="icon-${area.id}" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                    <div class="section-content" id="content-${area.id}">
+                        ${area.locations.map(loc => renderLocation(area.id, loc)).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderLocation(areaId, location) {
+            const key = `${areaId}-${location}`;
+            const d = data[key];
+            const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
+            const diffClass = diff < 0 ? 'diff-negative' : diff > 0 ? 'diff-positive' : 'diff-neutral';
+
+            return `
+                <div class="location-card">
+                    <div class="location-title">${location}</div>
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select class="status status-${d.status}" onchange="update('${key}', 'status', this.value)">
+                                <option value="pending" ${d.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="excellent" ${d.status === 'excellent' ? 'selected' : ''}>Excellent</option>
+                                <option value="good" ${d.status === 'good' ? 'selected' : ''}>Good</option>
+                                <option value="fair" ${d.status === 'fair' ? 'selected' : ''}>Fair</option>
+                                <option value="poor" ${d.status === 'poor' ? 'selected' : ''}>Poor</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Score (%)</label>
+                            <input type="number" value="${d.score}" min="0" max="100" placeholder="0-100" onchange="update('${key}', 'score', this.value)" />
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" ${d.deepClean ? 'checked' : ''} onchange="update('${key}', 'deepClean', this.checked)" />
+                            Deep Clean
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" ${d.routineClean ? 'checked' : ''} onchange="update('${key}', 'routineClean', this.checked)" />
+                            Routine Clean
+                        </label>
+                    </div>
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label>Manpower</label>
+                            <input type="text" value="${d.manpower}" onchange="update('${key}', 'manpower', this.value)" />
+                        </div>
+                        <div class="input-group">
+                            <label>Material</label>
+                            <input type="text" value="${d.material}" onchange="update('${key}', 'material', this.value)" />
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div class="input-group">
+                            <label>Stated Staff</label>
+                            <input type="number" value="${d.statedStaff}" onchange="update('${key}', 'statedStaff', this.value)" />
+                        </div>
+                        <div class="input-group">
+                            <label>Actual Staff</label>
+                            <input type="number" value="${d.actualStaff}" onchange="update('${key}', 'actualStaff', this.value)" />
+                        </div>
+                        <div class="input-group">
+                            <label>Difference</label>
+                            <div class="diff-display ${diffClass}">${diff || '-'}</div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Notes</label>
+                        <textarea rows="2" placeholder="Add notes..." onchange="update('${key}', 'notes', this.value)">${d.notes}</textarea>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleSection(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            const isActive = content.classList.contains('active');
+            
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.section-header svg').forEach(el => el.style.transform = 'rotate(0deg)');
+            
+            if (!isActive) {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function update(key, field, value) {
+            data[key][field] = value;
+            localStorage.setItem('inspectionData', JSON.stringify(data));
+            updateStats();
+            if (field === 'status' || field === 'actualStaff' || field === 'statedStaff') {
+                renderSections();
+            }
+        }
+
+        function updateStats() {
+            const values = Object.values(data);
+            const stats = {
+                excellent: values.filter(v => v.status === 'excellent').length,
+                good: values.filter(v => v.status === 'good').length,
+                fair: values.filter(v => v.status === 'fair').length,
+                poor: values.filter(v => v.status === 'poor').length,
+                pending: values.filter(v => v.status === 'pending').length
+            };
+            const scores = values.filter(v => v.score !== '').map(v => parseInt(v.score) || 0);
+            const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+
+            const cards = document.getElementById('stats').children;
+            cards[0].querySelector('.stat-value').textContent = stats.excellent;
+            cards[1].querySelector('.stat-value').textContent = stats.good;
+            cards[2].querySelector('.stat-value').textContent = stats.fair;
+            cards[3].querySelector('.stat-value').textContent = stats.poor;
+            cards[4].querySelector('.stat-value').textContent = stats.pending;
+            cards[5].querySelector('.stat-value').textContent = avgScore + '%';
+        }
+
+        function exportCSV() {
+            let csv = 'Date,Shift,Time,Inspector,Area,Location,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes\n';
+            const date = document.getElementById('date').value;
+            const shift = document.getElementById('shift').value;
+            const time = document.getElementById('time').value;
+            const inspector = document.getElementById('inspector').value;
+
+            areas.forEach(area => {
+                area.locations.forEach(loc => {
+                    const key = `${area.id}-${loc}`;
+                    const d = data[key];
+                    const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","${d.status}","${d.score}","${d.deepClean}","${d.routineClean}","${d.manpower}","${d.material}","${d.statedStaff}","${d.actualStaff}","${diff}","${d.notes}"\n`;
+                });
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cleanliness-inspection-${date}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function resetAll() {
+            if (confirm('Reset all data? This cannot be undone.')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
