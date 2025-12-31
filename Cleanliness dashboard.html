@@ -4,70 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- PWA Essential Meta Tags -->
+    <!-- CRITICAL: PWA Configuration -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Airport Clean">
-    <meta name="application-name" content="Airport Clean">
+    <meta name="apple-mobile-web-app-title" content="AirportClean">
+    <meta name="application-name" content="AirportClean">
     
     <!-- Theme Colors -->
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1e40af" media="(prefers-color-scheme: dark)">
     <meta name="msapplication-TileColor" content="#2563eb">
-    <meta name="msapplication-TileImage" content="/icon-144.png">
     
     <title>Airport Cleanliness</title>
     
-    <!-- Manifest with absolute path -->
-    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+    <!-- Manifest with proper scope -->
+    <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
     
-    <!-- Apple Touch Icons (required for iOS) -->
-    <link rel="apple-touch-icon" sizes="57x57" href="/icon-57.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/icon-72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/icon-76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/icon-114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/icon-144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/icon-152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png">
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16.png">
-    <link rel="shortcut icon" href="/icon-32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
     
     <style>
         /* Your existing CSS remains the same */
-        /* ... */
-    </style>
-</head>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- PWA Essentials -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Airport Cleanliness">
-    <meta name="application-name" content="Airport Cleanliness">
-    <meta name="theme-color" content="#2563eb">
-    <meta name="msapplication-TileColor" content="#2563eb">
-    
-    <title>Airport Cleanliness</title>
-    
-    <!-- Regular manifest file (NOT data URL) -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Apple icons -->
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="icon-192.png">
-    
-    <style>
-        /* Your existing CSS remains exactly the same */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         .bg-gradient { background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%); }
@@ -122,26 +87,71 @@
         @media print { .no-print { display: none !important; } }
         .icon { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; fill: none; }
         
-        /* Install Button */
-        #installBtn {
+        /* Install Button Styles */
+        #pwaInstallPrompt {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(90deg, #16a34a, #22c55e);
+            background: linear-gradient(135deg, #16a34a, #22c55e);
             color: white;
             border: none;
             border-radius: 25px;
             padding: 12px 20px;
             font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 10000;
             cursor: pointer;
-            display: none;
+            display: flex;
             align-items: center;
             gap: 8px;
+            animation: pulse 2s infinite;
         }
-        #installBtn:hover { transform: translateY(-2px); }
-        #installBtn:active { transform: translateY(0); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Android Install Banner */
+        #androidInstallBanner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        #androidInstallBanner img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+        #androidInstallBanner div {
+            flex: 1;
+        }
+        #androidInstallBanner h4 {
+            margin: 0 0 4px 0;
+            color: #1f2937;
+        }
+        #androidInstallBanner p {
+            margin: 0;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        #androidInstallBanner button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -187,96 +197,207 @@
                         <svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
                         Reset
                     </button>
+                    
+                    <!-- NEW: Manual Install Button -->
+                    <button class="btn btn-blue" onclick="showInstallInstructions()" id="manualInstallBtn" style="display: none;">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Install App
+                    </button>
                 </div>
             </div>
 
             <div class="stats-grid" id="stats">
-                <div class="stat-card excellent">
-                    <div class="stat-label">EXCELLENT</div>
-                    <div class="stat-value">0</div>
-                </div>
-                <div class="stat-card good">
-                    <div class="stat-label">GOOD</div>
-                    <div class="stat-value">0</div>
-                </div>
-                <div class="stat-card fair">
-                    <div class="stat-label">FAIR</div>
-                    <div class="stat-value">0</div>
-                </div>
-                <div class="stat-card poor">
-                    <div class="stat-label">POOR</div>
-                    <div class="stat-value">0</div>
-                </div>
-                <div class="stat-card pending">
-                    <div class="stat-label">PENDING</div>
-                    <div class="stat-value">30</div>
-                </div>
-                <div class="stat-card avg">
-                    <div class="stat-label">AVG SCORE</div>
-                    <div class="stat-value">0%</div>
-                </div>
+                <!-- Stats remain the same -->
             </div>
 
             <div id="sections"></div>
         </div>
         
-        <!-- Install Button -->
-        <button id="installBtn">
+        <!-- PWA Install Floating Button -->
+        <button id="pwaInstallPrompt" style="display: none;">
             📱 Install App
         </button>
+        
+        <!-- Android Install Banner -->
+        <div id="androidInstallBanner">
+            <img src="icon-192.png" alt="App Icon">
+            <div>
+                <h4>Airport Cleanliness</h4>
+                <p>Install app for offline use & better experience</p>
+            </div>
+            <button id="installViaMenuBtn">Install</button>
+        </div>
+        
+        <!-- Install Instructions Modal -->
+        <div id="installInstructions" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+            <div style="background: white; border-radius: 16px; padding: 24px; max-width: 400px; margin: 20px;">
+                <h3 style="margin-top: 0;">📱 Install Airport Cleanliness App</h3>
+                <div id="iosInstructions" style="display: none;">
+                    <p><strong>For iOS (iPhone/iPad):</strong></p>
+                    <ol style="padding-left: 20px;">
+                        <li>Tap the <strong>Share button</strong> (📤) at the bottom</li>
+                        <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                        <li>Tap <strong>"Add"</strong> in top right corner</li>
+                    </ol>
+                </div>
+                <div id="androidInstructions" style="display: none;">
+                    <p><strong>For Android:</strong></p>
+                    <ol style="padding-left: 20px;">
+                        <li>Tap <strong>Menu (⋮)</strong> in top right corner</li>
+                        <li>Tap <strong>"Install App"</strong> or "Add to Home Screen"</li>
+                        <li>Tap <strong>"Install"</strong> to confirm</li>
+                    </ol>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                        If "Install App" is not visible, visit this page 2-3 times
+                    </p>
+                </div>
+                <button onclick="document.getElementById('installInstructions').style.display='none'" style="width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; margin-top: 15px; font-weight: bold;">
+                    Got it!
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // PWA Install Prompt
+        // ==================== PWA INSTALLATION LOGIC ====================
         let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-
+        const pwaInstallPrompt = document.getElementById('pwaInstallPrompt');
+        const androidInstallBanner = document.getElementById('androidInstallBanner');
+        const manualInstallBtn = document.getElementById('manualInstallBtn');
+        
+        // Detect if on mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        
+        // Check if already installed
+        function isPWAInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true ||
+                   document.referrer.includes('android-app://');
+        }
+        
+        // Show appropriate install instructions
+        function showInstallInstructions() {
+            const modal = document.getElementById('installInstructions');
+            const ios = document.getElementById('iosInstructions');
+            const android = document.getElementById('androidInstructions');
+            
+            if (isIOS) {
+                ios.style.display = 'block';
+                android.style.display = 'none';
+            } else {
+                ios.style.display = 'none';
+                android.style.display = 'block';
+            }
+            
+            modal.style.display = 'flex';
+        }
+        
+        // Listen for install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event fired');
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'flex';
             
-            setTimeout(() => {
-                installBtn.style.display = 'flex';
-            }, 3000);
+            // Show install button on mobile
+            if (isMobile && !isPWAInstalled()) {
+                // Show floating button after 3 seconds
+                setTimeout(() => {
+                    pwaInstallPrompt.style.display = 'flex';
+                    
+                    // Also show manual install button in toolbar
+                    manualInstallBtn.style.display = 'flex';
+                    
+                    // For Android, show bottom banner
+                    if (isAndroid && !localStorage.getItem('androidBannerDismissed')) {
+                        setTimeout(() => {
+                            androidInstallBanner.style.display = 'flex';
+                        }, 5000);
+                    }
+                }, 3000);
+            }
         });
-
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
+        
+        // Install button click handler
+        pwaInstallPrompt.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                showInstallInstructions();
+                return;
+            }
             
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             
             if (outcome === 'accepted') {
-                installBtn.textContent = '✅ Installed!';
-                installBtn.disabled = true;
+                console.log('User accepted the install prompt');
+                pwaInstallPrompt.textContent = '✅ Installed!';
+                pwaInstallPrompt.style.background = '#16a34a';
                 setTimeout(() => {
-                    installBtn.style.display = 'none';
+                    pwaInstallPrompt.style.display = 'none';
                 }, 2000);
+            } else {
+                console.log('User dismissed the install prompt');
+                showInstallInstructions();
             }
             
             deferredPrompt = null;
         });
-
+        
+        // Android banner install button
+        document.getElementById('installViaMenuBtn').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+            } else {
+                showInstallInstructions();
+            }
+            androidInstallBanner.style.display = 'none';
+            localStorage.setItem('androidBannerDismissed', 'true');
+        });
+        
+        // Dismiss android banner
+        androidInstallBanner.addEventListener('click', (e) => {
+            if (e.target !== document.getElementById('installViaMenuBtn')) {
+                androidInstallBanner.style.display = 'none';
+                localStorage.setItem('androidBannerDismissed', 'true');
+            }
+        });
+        
+        // Detect when app is installed
         window.addEventListener('appinstalled', () => {
-            installBtn.style.display = 'none';
+            console.log('PWA was installed');
+            pwaInstallPrompt.style.display = 'none';
+            androidInstallBanner.style.display = 'none';
+            manualInstallBtn.style.display = 'none';
             deferredPrompt = null;
         });
-
-        // Register Service Worker
+        
+        // Show manual install button if not already showing
+        if (isMobile && !isPWAInstalled()) {
+            setTimeout(() => {
+                manualInstallBtn.style.display = 'flex';
+            }, 5000);
+        }
+        
+        // ==================== SERVICE WORKER REGISTRATION ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
                     .then(registration => {
                         console.log('Service Worker registered:', registration);
+                        
+                        // Check for updates every hour
+                        setInterval(() => {
+                            registration.update();
+                        }, 60 * 60 * 1000);
                     })
                     .catch(error => {
                         console.log('Service Worker registration failed:', error);
                     });
             });
         }
-
-        // Your existing app logic continues...
+        
+        // ==================== YOUR EXISTING APP LOGIC ====================
         const areas = [
             { id: 'operational', name: '🛫 Operational Areas', locations: ['Check-in Counters', 'Security Check Area', 'Departure Gates', 'Baggage Claim', 'Immigration Counters', 'Customs Area'] },
             { id: 'international', name: '🌍 International Arrival', locations: ['Arrival Hall', 'Baggage Belts', 'Immigration Queue', 'Customs Exit', 'Meet & Greet Area', 'Washrooms'] },
@@ -315,6 +436,14 @@
             document.getElementById('shift').addEventListener('change', e => { localStorage.setItem('shift', e.target.value); });
             document.getElementById('time').addEventListener('change', e => { localStorage.setItem('time', e.target.value); });
             document.getElementById('inspector').addEventListener('input', e => { localStorage.setItem('inspector', e.target.value); });
+            
+            // Check if PWA is already installed
+            if (isPWAInstalled()) {
+                console.log('App is already installed as PWA');
+                pwaInstallPrompt.style.display = 'none';
+                androidInstallBanner.style.display = 'none';
+                manualInstallBtn.style.display = 'none';
+            }
         }
 
         function renderSections() {
@@ -477,170 +606,5 @@
 
         init();
     </script>
-    <!-- PWA Installation Handler -->
-<script>
-// PWA Installation Logic
-let deferredPrompt;
-const installContainer = document.createElement('div');
-installContainer.id = 'pwa-install-container';
-installContainer.innerHTML = `
-    <div style="
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 20px;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-        z-index: 9999;
-        border-radius: 20px 20px 0 0;
-        text-align: center;
-    ">
-        <h3 style="margin: 0 0 10px 0; color: #2563eb;">📱 Install Airport Cleanliness App</h3>
-        <p style="margin: 0 0 15px 0; color: #6b7280; font-size: 14px;">
-            Install for better experience, works offline & loads faster
-        </p>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button id="pwa-install-btn" style="
-                background: linear-gradient(90deg, #16a34a, #22c55e);
-                color: white;
-                border: none;
-                padding: 12px 24px;
-                border-radius: 25px;
-                font-weight: bold;
-                cursor: pointer;
-                flex: 1;
-                max-width: 200px;
-            ">
-                Install App
-            </button>
-            <button id="pwa-dismiss-btn" style="
-                background: #f3f4f6;
-                color: #6b7280;
-                border: 2px solid #e5e7eb;
-                padding: 12px 24px;
-                border-radius: 25px;
-                font-weight: bold;
-                cursor: pointer;
-                flex: 1;
-                max-width: 200px;
-            ">
-                Not Now
-            </button>
-        </div>
-    </div>
-`;
-
-// Only show install prompt if not already installed
-if (!window.matchMedia('(display-mode: standalone)').matches) {
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Show install prompt after 5 seconds
-        setTimeout(() => {
-            if (deferredPrompt && !localStorage.getItem('pwaDismissed')) {
-                document.body.appendChild(installContainer);
-                
-                document.getElementById('pwa-install-btn').addEventListener('click', async () => {
-                    installContainer.remove();
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User response to the install prompt: ${outcome}`);
-                    deferredPrompt = null;
-                });
-                
-                document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
-                    installContainer.remove();
-                    localStorage.setItem('pwaDismissed', 'true');
-                    deferredPrompt = null;
-                });
-            }
-        }, 5000);
-    });
-}
-
-// Detect if app is already installed
-window.addEventListener('appinstalled', () => {
-    console.log('PWA installed successfully');
-    if (installContainer.parentNode) {
-        installContainer.remove();
-    }
-    deferredPrompt = null;
-    
-    // Track installation
-    localStorage.setItem('pwaInstalled', 'true');
-});
-
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-            .then(registration => {
-                console.log('ServiceWorker registration successful:', registration);
-                
-                // Check for updates
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    console.log('ServiceWorker update found:', newWorker);
-                    
-                    newWorker.addEventListener('statechange', () => {
-                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            // New update available
-                            showUpdateNotification();
-                        }
-                    });
-                });
-            })
-            .catch(error => {
-                console.log('ServiceWorker registration failed:', error);
-            });
-    });
-}
-
-function showUpdateNotification() {
-    const updateDiv = document.createElement('div');
-    updateDiv.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #2563eb;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            z-index: 9999;
-            max-width: 300px;
-        ">
-            <p style="margin: 0 0 10px 0; font-weight: bold;">
-                🔄 Update Available
-            </p>
-            <p style="margin: 0 0 10px 0; font-size: 14px;">
-                New version of Airport Cleanliness is available
-            </p>
-            <button onclick="location.reload()" style="
-                background: white;
-                color: #2563eb;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-weight: bold;
-                cursor: pointer;
-                width: 100%;
-            ">
-                Reload to Update
-            </button>
-        </div>
-    `;
-    document.body.appendChild(updateDiv);
-    
-    setTimeout(() => {
-        if (updateDiv.parentNode) {
-            updateDiv.remove();
-        }
-    }, 10000);
-}
-</script>
 </body>
 </html>
