@@ -397,13 +397,75 @@
             });
         }
         
-        // ==================== YOUR EXISTING APP LOGIC ====================
+        // ==================== UPDATED APP LOGIC WITH NEW AREAS ====================
+        // Updated areas array with all your specified operational areas
         const areas = [
-            { id: 'operational', name: '🛫 Operational Areas', locations: ['Check-in Counters', 'Security Check Area', 'Departure Gates', 'Baggage Claim', 'Immigration Counters', 'Customs Area'] },
-            { id: 'international', name: '🌍 International Arrival', locations: ['Arrival Hall', 'Baggage Belts', 'Immigration Queue', 'Customs Exit', 'Meet & Greet Area', 'Washrooms'] },
-            { id: 'domestic', name: '🏠 Domestic Arrival', locations: ['Arrival Terminal', 'Baggage Collection', 'Exit Gates', 'Waiting Area', 'Information Desk', 'Washrooms'] },
-            { id: 'concourse', name: '🏛️ Concourse Hall', locations: ['Main Concourse', 'Retail Areas', 'Food Courts', 'Seating Areas', 'Escalators/Elevators', 'Walkways'] },
-            { id: 'parking', name: '🚗 Parking & Roads', locations: ['Parking Lot A', 'Parking Lot B', 'Access Roads', 'Drop-off Zone', 'Pickup Zone', 'Service Roads'] }
+            { 
+                id: 'apron', 
+                name: '✈️ Apron Area', 
+                locations: [
+                    'Apron Area North Side',
+                    'Apron Area South Side',
+                    'Apron Toilet North Side',
+                    'Apron Toilet South Side',
+                    'AVIO Bridge Stairs Cleanliness'
+                ] 
+            },
+            { 
+                id: 'international', 
+                name: '🌍 International Arrival Hall', 
+                locations: [
+                    'Immigration Area (General)',
+                    'Immigration Area - Gents Toilet',
+                    'Immigration Area - Ladies Toilet',
+                    'Intl. Arrival Hall - Gents Toilet',
+                    'Intl. Arrival Hall - Ladies Toilet',
+                    'Intl. Arrival Hall - Wheelchair Toilet',
+                    'Belts Area',
+                    'Exit Area Towards Concourse Hall'
+                ] 
+            },
+            { 
+                id: 'domestic', 
+                name: '🏠 Domestic Arrival Hall', 
+                locations: [
+                    'Dom. Arrival Hall (General)',
+                    'Dom. Arrival Hall - Gents Toilet',
+                    'Dom. Arrival Hall - Ladies Toilet',
+                    'Dom. Arrival Hall - Wheelchair Toilet',
+                    'Belts Area',
+                    'Exit Area Towards Concourse Hall'
+                ] 
+            },
+            { 
+                id: 'concourse', 
+                name: '🏛️ Concourse Hall', 
+                locations: [
+                    'Concourse North Side',
+                    'Concourse South Side',
+                    'Concourse - Gents Toilet',
+                    'Concourse - Ladies Toilet',
+                    'Concourse - Wheelchair Toilet',
+                    'Concourse - Janitorial Room (North)',
+                    'Concourse - Janitorial Room (South)'
+                ] 
+            },
+            { 
+                id: 'parking', 
+                name: '🚗 Parking & Roads', 
+                locations: [
+                    'Parking Area North',
+                    'Parking Area South',
+                    'Parking Area Central',
+                    'VVIP Lanes & Driveways',
+                    'Parking Entry/Exit Points',
+                    'Entry Roads',
+                    'Exit Roads',
+                    'Cargo Roads',
+                    'Mess Road',
+                    'Old Car Parking Area'
+                ] 
+            }
         ];
 
         let data = {};
@@ -414,10 +476,21 @@
             if (saved) {
                 data = JSON.parse(saved);
             } else {
+                // Initialize all areas and locations with default data
                 areas.forEach(area => {
                     area.locations.forEach(loc => {
                         const key = `${area.id}-${loc}`;
-                        data[key] = { status: 'pending', score: '', deepClean: false, routineClean: false, manpower: '', material: '', statedStaff: '', actualStaff: '', notes: '' };
+                        data[key] = { 
+                            status: 'pending', 
+                            score: '', 
+                            deepClean: false, 
+                            routineClean: false, 
+                            manpower: '', 
+                            material: '', 
+                            statedStaff: '', 
+                            actualStaff: '', 
+                            notes: '' 
+                        };
                     });
                 });
             }
@@ -517,7 +590,7 @@
                         </div>
                         <div class="input-group">
                             <label>Difference</label>
-                            <div class="diff-display ${diffClass}">${diff || '-'}</div>
+                            <div class="diff-display ${diffClass}">${diff !== '' ? (diff > 0 ? '+' + diff : diff) : '-'}</div>
                         </div>
                     </div>
                     <div class="input-group">
@@ -547,7 +620,17 @@
             localStorage.setItem('inspectionData', JSON.stringify(data));
             updateStats();
             if (field === 'status' || field === 'actualStaff' || field === 'statedStaff') {
-                renderSections();
+                // Re-render the specific location to update the difference display
+                const [areaId, location] = key.split('-');
+                const sectionContent = document.getElementById(`content-${areaId}`);
+                if (sectionContent) {
+                    const locationCard = Array.from(sectionContent.children).find(card => 
+                        card.querySelector('.location-title').textContent === location
+                    );
+                    if (locationCard) {
+                        locationCard.outerHTML = renderLocation(areaId, location);
+                    }
+                }
             }
         }
 
@@ -563,13 +646,34 @@
             const scores = values.filter(v => v.score !== '').map(v => parseInt(v.score) || 0);
             const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 
-            const cards = document.getElementById('stats').children;
-            cards[0].querySelector('.stat-value').textContent = stats.excellent;
-            cards[1].querySelector('.stat-value').textContent = stats.good;
-            cards[2].querySelector('.stat-value').textContent = stats.fair;
-            cards[3].querySelector('.stat-value').textContent = stats.poor;
-            cards[4].querySelector('.stat-value').textContent = stats.pending;
-            cards[5].querySelector('.stat-value').textContent = avgScore + '%';
+            // Create or update stats cards
+            const statsContainer = document.getElementById('stats');
+            statsContainer.innerHTML = `
+                <div class="stat-card excellent">
+                    <div class="stat-label">Excellent</div>
+                    <div class="stat-value">${stats.excellent}</div>
+                </div>
+                <div class="stat-card good">
+                    <div class="stat-label">Good</div>
+                    <div class="stat-value">${stats.good}</div>
+                </div>
+                <div class="stat-card fair">
+                    <div class="stat-label">Fair</div>
+                    <div class="stat-value">${stats.fair}</div>
+                </div>
+                <div class="stat-card poor">
+                    <div class="stat-label">Poor</div>
+                    <div class="stat-value">${stats.poor}</div>
+                </div>
+                <div class="stat-card pending">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value">${stats.pending}</div>
+                </div>
+                <div class="stat-card avg">
+                    <div class="stat-label">Avg Score</div>
+                    <div class="stat-value">${avgScore}%</div>
+                </div>
+            `;
         }
 
         function exportCSV() {
@@ -604,6 +708,7 @@
             }
         }
 
+        // Initialize the application
         init();
     </script>
 </body>
