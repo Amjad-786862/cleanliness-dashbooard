@@ -166,6 +166,10 @@
         .stat-card.poor { background: #dc2626; color: white; }
         .stat-card.pending { background: #6b7280; color: white; }
         .stat-card.avg { background: #4f46e5; color: white; }
+        .stat-card.walls-clean { background: #10b981; color: white; }
+        .stat-card.web-clean { background: #8b5cf6; color: white; }
+        .stat-card.fia-excellent { background: #059669; color: white; }
+        .stat-card.belt-good { background: #3b82f6; color: white; }
         .stat-label { 
             font-size: 11px; 
             opacity: 0.9; 
@@ -278,6 +282,11 @@
         .status-fair { background: #eab308; }
         .status-poor { background: #dc2626; }
         .status-pending { background: #6b7280; }
+        .status-clean { background: #10b981; }
+        .status-dirty { background: #dc2626; }
+        .status-completed { background: #10b981; }
+        .status-in-progress { background: #f59e0b; }
+        .status-not-started { background: #6b7280; }
         
         /* Difference Display */
         .diff-positive { background: #dcfce7; color: #166534; }
@@ -300,7 +309,153 @@
             .card { box-shadow: none; border: 1px solid #ddd; }
         }
         
-        /* ==================== DUSTBINS SECTION - FIXED ==================== */
+        /* ==================== SPECIAL SECTIONS ==================== */
+        
+        /* Walls Check Section */
+        .walls-check-group {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .walls-title {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+        .walls-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            width: 100%;
+        }
+        .wall-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex: 1;
+            min-width: 100px;
+        }
+        .wall-option input[type="radio"] {
+            margin: 0;
+            min-width: 20px;
+            height: 20px;
+        }
+        .wall-tick { 
+            color: #10b981; 
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .wall-cross { 
+            color: #dc2626; 
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        /* Web Clean Section */
+        .web-clean-group {
+            background: #faf5ff;
+            border: 1px solid #8b5cf6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .web-clean-title {
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+        
+        /* FIA Counter Section */
+        .fia-counter-group {
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .fia-counter-title {
+            font-weight: 600;
+            color: #15803d;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+        
+        /* Conveyor Belt Section */
+        .conveyor-belt-group {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .conveyor-belt-title {
+            font-weight: 600;
+            color: #1d4ed8;
+            margin-bottom: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+        
+        /* Level 0 Big Section */
+        .level0-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        @media (min-width: 640px) {
+            .level0-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .level0-subsection {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .subsection-title {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-size: 14px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        /* Dustbins Section */
         .dustbins-check-group {
             background: #fef3c7;
             border: 1px solid #fbbf24;
@@ -321,8 +476,6 @@
             gap: 6px;
             width: 100%;
         }
-        
-        /* Fixed Grid - Single column on mobile */
         .dustbins-grid {
             display: flex;
             flex-direction: column;
@@ -330,8 +483,6 @@
             margin-bottom: 12px;
             width: 100%;
         }
-        
-        /* On larger screens, show 2 columns */
         @media (min-width: 480px) {
             .dustbins-grid {
                 display: grid;
@@ -339,7 +490,6 @@
                 gap: 10px;
             }
         }
-        
         .dustbin-criteria {
             background: white;
             border: 1px solid #fbbf24;
@@ -391,8 +541,9 @@
             white-space: nowrap;
         }
         
-        /* Date input in dustbins */
-        .dustbin-criteria input[type="datetime-local"] {
+        /* Date inputs */
+        .dustbin-criteria input[type="datetime-local"],
+        .web-clean-group input[type="date"] {
             width: 100%;
             padding: 8px;
             border: 1px solid #d1d5db;
@@ -401,8 +552,8 @@
             box-sizing: border-box;
         }
         
-        /* Dustbins notes textarea */
-        .dustbins-notes {
+        /* Textareas */
+        textarea {
             width: 100%;
             padding: 8px;
             border: 1px solid #d1d5db;
@@ -411,7 +562,7 @@
             box-sizing: border-box;
             min-height: 60px;
             resize: vertical;
-            margin-top: 8px;
+            margin-top: 4px;
         }
         
         /* Footer */
@@ -441,8 +592,9 @@
             .grid-3 {
                 grid-template-columns: 1fr 1fr;
             }
+            .walls-options,
             .criteria-options {
-                gap: 6px;
+                gap: 8px;
             }
         }
         
@@ -454,12 +606,13 @@
         
         /* Touch-friendly sizes */
         input, select, textarea, button {
-            font-size: 16px !important; /* Prevents iOS zoom */
-            min-height: 44px; /* Apple recommended touch target */
+            font-size: 16px !important;
+            min-height: 44px;
         }
         
         .checkbox-label input[type="checkbox"],
-        .criteria-option input[type="radio"] {
+        input[type="radio"],
+        .wall-option input[type="radio"] {
             min-height: 20px;
             min-width: 20px;
         }
@@ -554,7 +707,9 @@
                     'Apron Toilet South Side',
                     'Bridge Stairs Cleanliness'
                 ],
-                hasDustbins: true
+                hasDustbins: true,
+                hasWalls: true,
+                hasToilets: true
             },
             { 
                 id: 'international', 
@@ -567,7 +722,11 @@
                     'Wheelchair Toilet',
                     'Belts Area'
                 ],
-                hasDustbins: true
+                hasDustbins: true,
+                hasWalls: true,
+                hasToilets: true,
+                hasFIACounters: true,
+                hasConveyorBelt: true
             },
             { 
                 id: 'domestic', 
@@ -579,7 +738,10 @@
                     'Wheelchair Toilet',
                     'Belts Area'
                 ],
-                hasDustbins: true
+                hasDustbins: true,
+                hasWalls: true,
+                hasToilets: true,
+                hasConveyorBelt: true
             },
             { 
                 id: 'concourse', 
@@ -591,7 +753,9 @@
                     'Ladies Toilet',
                     'Wheelchair Toilet'
                 ],
-                hasDustbins: true
+                hasDustbins: true,
+                hasWalls: true,
+                hasToilets: true
             },
             { 
                 id: 'parking', 
@@ -603,6 +767,25 @@
                     'Entry/Exit Points'
                 ],
                 hasDustbins: true
+            },
+            { 
+                id: 'level0', 
+                name: '🏢 Level 0 - Complete Area', 
+                locations: [
+                    'Concourse Hall Level 0 (General)',
+                    'Concourse Hall - Gents Toilet',
+                    'Concourse Hall - Ladies Toilet',
+                    'Concourse Hall - Wheelchair Toilet',
+                    'Web Cleaning North Section',
+                    'Web Cleaning South Section',
+                    'Staircases Level 0',
+                    'Corridors & Passageways'
+                ],
+                hasDustbins: true,
+                hasWalls: true,
+                hasToilets: true,
+                hasWebClean: true,
+                isLevel0: true
             }
         ];
 
@@ -648,6 +831,52 @@
                             cleaned: 'pending',
                             emptiedTimely: 'pending',
                             lastEmptied: '',
+                            notes: ''
+                        };
+                    }
+                }
+                
+                // Initialize walls data
+                if (area.hasWalls) {
+                    const wallsKey = `${area.id}-walls`;
+                    if (!data[wallsKey]) {
+                        data[wallsKey] = { 
+                            wallsStatus: 'pending',
+                            notes: ''
+                        };
+                    }
+                }
+                
+                // Initialize FIA counters data
+                if (area.hasFIACounters) {
+                    const fiaKey = `${area.id}-fia-counters`;
+                    if (!data[fiaKey]) {
+                        data[fiaKey] = { 
+                            status: 'pending',
+                            notes: ''
+                        };
+                    }
+                }
+                
+                // Initialize conveyor belt data
+                if (area.hasConveyorBelt) {
+                    const beltKey = `${area.id}-conveyor-belt`;
+                    if (!data[beltKey]) {
+                        data[beltKey] = { 
+                            status: 'pending',
+                            lastCleaned: '',
+                            notes: ''
+                        };
+                    }
+                }
+                
+                // Initialize web clean data
+                if (area.hasWebClean) {
+                    const webKey = `${area.id}-web-clean`;
+                    if (!data[webKey]) {
+                        data[webKey] = { 
+                            status: 'pending',
+                            lastCleaned: '',
                             notes: ''
                         };
                     }
@@ -711,6 +940,169 @@
 
         function renderAreaContent(area) {
             let content = '';
+            
+            // a) Add Walls Section (Tick and Cross bullets)
+            if (area.hasWalls) {
+                const wallsKey = `${area.id}-walls`;
+                const wallsData = data[wallsKey] || {};
+                content += `
+                    <div class="walls-check-group">
+                        <div class="walls-title">
+                            🧱 Walls Condition
+                        </div>
+                        <div class="walls-options">
+                            <label class="wall-option">
+                                <input type="radio" name="${wallsKey}" value="clean" 
+                                    ${wallsData.wallsStatus === 'clean' ? 'checked' : ''}
+                                    onchange="updateWallsStatus('${area.id}', 'clean')">
+                                <span class="wall-tick">✅ Clean</span>
+                            </label>
+                            <label class="wall-option">
+                                <input type="radio" name="${wallsKey}" value="dirty" 
+                                    ${wallsData.wallsStatus === 'dirty' ? 'checked' : ''}
+                                    onchange="updateWallsStatus('${area.id}', 'dirty')">
+                                <span class="wall-cross">❌ Dirty</span>
+                            </label>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <textarea placeholder="Walls condition notes..."
+                                onchange="updateWallsNotes('${area.id}', this.value)">${wallsData.notes || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Add toilets walls check if area has toilets
+            if (area.hasToilets && area.id !== 'level0') {
+                content += `
+                    <div class="walls-check-group">
+                        <div class="walls-title">
+                            🚽 Toilet Walls Condition
+                        </div>
+                        <div class="walls-options">
+                            <label class="wall-option">
+                                <input type="radio" name="${area.id}-toilet-walls" value="clean" 
+                                    ${data[`${area.id}-toilet-walls`]?.status === 'clean' ? 'checked' : ''}
+                                    onchange="updateToiletWalls('${area.id}', 'clean')">
+                                <span class="wall-tick">✅ Clean</span>
+                            </label>
+                            <label class="wall-option">
+                                <input type="radio" name="${area.id}-toilet-walls" value="dirty" 
+                                    ${data[`${area.id}-toilet-walls`]?.status === 'dirty' ? 'checked' : ''}
+                                    onchange="updateToiletWalls('${area.id}', 'dirty')">
+                                <span class="wall-cross">❌ Dirty</span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // c) Add Immigration FIA Counter Section
+            if (area.hasFIACounters) {
+                const fiaKey = `${area.id}-fia-counters`;
+                const fiaData = data[fiaKey] || {};
+                content += `
+                    <div class="fia-counter-group">
+                        <div class="fia-counter-title">
+                            🛂 Immigration FIA Counters
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Status</label>
+                                <select class="status status-${fiaData.status || 'pending'}" 
+                                    onchange="updateFIAStatus('${area.id}', this.value)">
+                                    <option value="pending" ${fiaData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
+                                    <option value="excellent" ${fiaData.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
+                                    <option value="good" ${fiaData.status === 'good' ? 'selected' : ''}>👍 Good</option>
+                                    <option value="fair" ${fiaData.status === 'fair' ? 'selected' : ''}>⚠️ Fair</option>
+                                    <option value="poor" ${fiaData.status === 'poor' ? 'selected' : ''}>❌ Poor</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Last Checked</label>
+                                <input type="datetime-local" 
+                                    value="${fiaData.lastChecked || ''}"
+                                    onchange="updateFIALastChecked('${area.id}', this.value)">
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <textarea placeholder="FIA counters notes..."
+                                onchange="updateFIANotes('${area.id}', this.value)">${fiaData.notes || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // d) Add Conveyor Belt Steel Section
+            if (area.hasConveyorBelt) {
+                const beltKey = `${area.id}-conveyor-belt`;
+                const beltData = data[beltKey] || {};
+                content += `
+                    <div class="conveyor-belt-group">
+                        <div class="conveyor-belt-title">
+                            🔄 Conveyor Belt Steel Section
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Status</label>
+                                <select class="status status-${beltData.status || 'pending'}" 
+                                    onchange="updateBeltStatus('${area.id}', this.value)">
+                                    <option value="pending" ${beltData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
+                                    <option value="excellent" ${beltData.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
+                                    <option value="good" ${beltData.status === 'good' ? 'selected' : ''}>👍 Good</option>
+                                    <option value="fair" ${beltData.status === 'fair' ? 'selected' : ''}>⚠️ Fair</option>
+                                    <option value="poor" ${beltData.status === 'poor' ? 'selected' : ''}>❌ Poor</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Last Cleaned</label>
+                                <input type="datetime-local" 
+                                    value="${beltData.lastCleaned || ''}"
+                                    onchange="updateBeltLastCleaned('${area.id}', this.value)">
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <textarea placeholder="Conveyor belt notes..."
+                                onchange="updateBeltNotes('${area.id}', this.value)">${beltData.notes || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // b) Add Web Clean to Level 0 and e) Web sections
+            if (area.hasWebClean) {
+                const webKey = `${area.id}-web-clean`;
+                const webData = data[webKey] || {};
+                content += `
+                    <div class="web-clean-group">
+                        <div class="web-clean-title">
+                            🕸️ Web Cleaning Status
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Status</label>
+                                <select class="status status-${webData.status || 'pending'}" 
+                                    onchange="updateWebCleanStatus('${area.id}', this.value)">
+                                    <option value="pending" ${webData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
+                                    <option value="completed" ${webData.status === 'completed' ? 'selected' : ''}>✅ Completed</option>
+                                    <option value="in-progress" ${webData.status === 'in-progress' ? 'selected' : ''}>🔄 In Progress</option>
+                                    <option value="not-started" ${webData.status === 'not-started' ? 'selected' : ''}>⏸️ Not Started</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Last Cleaned</label>
+                                <input type="date" 
+                                    value="${webData.lastCleaned || ''}"
+                                    onchange="updateWebCleanDate('${area.id}', this.value)">
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <textarea placeholder="Web cleaning notes..."
+                                onchange="updateWebCleanNotes('${area.id}', this.value)">${webData.notes || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+            }
             
             // Add dustbins section if applicable
             if (area.hasDustbins) {
@@ -793,15 +1185,65 @@
                         </div>
                         
                         <div style="margin-top: 8px;">
-                            <textarea class="dustbins-notes" placeholder="Dustbins notes..."
+                            <textarea placeholder="Dustbins notes..."
                                 onchange="updateDustbinsNotes('${area.id}', this.value)">${dustbinsData.notes || ''}</textarea>
                         </div>
                     </div>
                 `;
             }
             
-            // Add regular location cards
-            content += area.locations.map(loc => renderLocation(area.id, loc)).join('');
+            // e) Special layout for Level 0 Big Section
+            if (area.isLevel0) {
+                content += `
+                    <div class="level0-grid">
+                        <div class="level0-subsection">
+                            <div class="subsection-title">🏢 Concourse Hall Level 0</div>
+                            ${renderLocation(area.id, 'Concourse Hall Level 0 (General)')}
+                        </div>
+                        
+                        <div class="level0-subsection">
+                            <div class="subsection-title">🚻 Toilets Level 0</div>
+                            ${renderLocation(area.id, 'Concourse Hall - Gents Toilet')}
+                            ${renderLocation(area.id, 'Concourse Hall - Ladies Toilet')}
+                            ${renderLocation(area.id, 'Concourse Hall - Wheelchair Toilet')}
+                            <div class="walls-check-group" style="margin-top: 10px;">
+                                <div class="walls-title">
+                                    🧱 Toilet Walls Condition
+                                </div>
+                                <div class="walls-options">
+                                    <label class="wall-option">
+                                        <input type="radio" name="level0-toilet-walls" value="clean" 
+                                            ${data['level0-toilet-walls']?.status === 'clean' ? 'checked' : ''}
+                                            onchange="updateToiletWalls('level0', 'clean')">
+                                        <span class="wall-tick">✅ Clean</span>
+                                    </label>
+                                    <label class="wall-option">
+                                        <input type="radio" name="level0-toilet-walls" value="dirty" 
+                                            ${data['level0-toilet-walls']?.status === 'dirty' ? 'checked' : ''}
+                                            onchange="updateToiletWalls('level0', 'dirty')">
+                                        <span class="wall-cross">❌ Dirty</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="level0-subsection">
+                            <div class="subsection-title">🕸️ Web Cleaning Sections</div>
+                            ${renderLocation(area.id, 'Web Cleaning North Section')}
+                            ${renderLocation(area.id, 'Web Cleaning South Section')}
+                        </div>
+                        
+                        <div class="level0-subsection">
+                            <div class="subsection-title">🚶 Access Areas</div>
+                            ${renderLocation(area.id, 'Staircases Level 0')}
+                            ${renderLocation(area.id, 'Corridors & Passageways')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Regular locations for other areas
+                content += area.locations.map(loc => renderLocation(area.id, loc)).join('');
+            }
             
             return content;
         }
@@ -892,6 +1334,74 @@
             updateStats();
         }
 
+        // Walls functions
+        function updateWallsStatus(areaId, status) {
+            const key = `${areaId}-walls`;
+            updateData(key, 'wallsStatus', status);
+        }
+
+        function updateWallsNotes(areaId, value) {
+            const key = `${areaId}-walls`;
+            updateData(key, 'notes', value);
+        }
+
+        function updateToiletWalls(areaId, status) {
+            const key = `${areaId}-toilet-walls`;
+            if (!data[key]) data[key] = {};
+            data[key].status = status;
+            localStorage.setItem('airportCleanlinessData', JSON.stringify(data));
+            updateStats();
+        }
+
+        // FIA Counter functions
+        function updateFIAStatus(areaId, status) {
+            const key = `${areaId}-fia-counters`;
+            updateData(key, 'status', status);
+        }
+
+        function updateFIALastChecked(areaId, value) {
+            const key = `${areaId}-fia-counters`;
+            updateData(key, 'lastChecked', value);
+        }
+
+        function updateFIANotes(areaId, value) {
+            const key = `${areaId}-fia-counters`;
+            updateData(key, 'notes', value);
+        }
+
+        // Conveyor Belt functions
+        function updateBeltStatus(areaId, status) {
+            const key = `${areaId}-conveyor-belt`;
+            updateData(key, 'status', status);
+        }
+
+        function updateBeltLastCleaned(areaId, value) {
+            const key = `${areaId}-conveyor-belt`;
+            updateData(key, 'lastCleaned', value);
+        }
+
+        function updateBeltNotes(areaId, value) {
+            const key = `${areaId}-conveyor-belt`;
+            updateData(key, 'notes', value);
+        }
+
+        // Web Clean functions
+        function updateWebCleanStatus(areaId, status) {
+            const key = `${areaId}-web-clean`;
+            updateData(key, 'status', status);
+        }
+
+        function updateWebCleanDate(areaId, value) {
+            const key = `${area.id}-web-clean`;
+            updateData(key, 'lastCleaned', value);
+        }
+
+        function updateWebCleanNotes(areaId, value) {
+            const key = `${areaId}-web-clean`;
+            updateData(key, 'notes', value);
+        }
+
+        // Dustbins functions
         function updateDustbins(areaId, field, value) {
             const key = `${areaId}-dustbins`;
             updateData(key, field, value);
@@ -932,7 +1442,11 @@
                 good: values.filter(v => v.status === 'good').length,
                 fair: values.filter(v => v.status === 'fair').length,
                 poor: values.filter(v => v.status === 'poor').length,
-                pending: values.filter(v => v.status === 'pending' || !v.status).length
+                pending: values.filter(v => v.status === 'pending' || !v.status).length,
+                wallsClean: values.filter(v => v.wallsStatus === 'clean').length,
+                webCompleted: values.filter(v => v.status === 'completed' && v.notes && v.notes.includes('web')).length,
+                fiaExcellent: values.filter(v => v.status === 'excellent' && v.notes && v.notes.includes('fia')).length,
+                beltGood: values.filter(v => v.status === 'good' && v.notes && v.notes.includes('belt')).length
             };
             
             const scores = values.filter(v => v.score !== '' && v.score !== undefined).map(v => parseInt(v.score) || 0);
@@ -966,10 +1480,6 @@
                     <div class="stat-label">Poor</div>
                     <div class="stat-value">${stats.poor}</div>
                 </div>
-                <div class="stat-card pending">
-                    <div class="stat-label">Pending</div>
-                    <div class="stat-value">${stats.pending}</div>
-                </div>
                 <div class="stat-card avg">
                     <div class="stat-label">Avg Score</div>
                     <div class="stat-value">${avgScore}%</div>
@@ -978,20 +1488,28 @@
                     <div class="stat-label">Full Bins</div>
                     <div class="stat-value">${dustbinStats.fullYes}</div>
                 </div>
-                <div class="stat-card ${dustbinStats.cleanedYes > 0 ? 'good' : 'fair'}">
-                    <div class="stat-label">Clean Bins</div>
-                    <div class="stat-value">${dustbinStats.cleanedYes}</div>
+                <div class="stat-card walls-clean">
+                    <div class="stat-label">Walls Clean</div>
+                    <div class="stat-value">${stats.wallsClean}</div>
                 </div>
-                <div class="stat-card ${dustbinStats.emptiedYes > 0 ? 'good' : 'fair'}">
-                    <div class="stat-label">On Time</div>
-                    <div class="stat-value">${dustbinStats.emptiedYes}</div>
+                <div class="stat-card web-clean">
+                    <div class="stat-label">Web Cleaned</div>
+                    <div class="stat-value">${stats.webCompleted}</div>
+                </div>
+                <div class="stat-card fia-excellent">
+                    <div class="stat-label">FIA Excellent</div>
+                    <div class="stat-value">${stats.fiaExcellent}</div>
+                </div>
+                <div class="stat-card belt-good">
+                    <div class="stat-label">Belts Good</div>
+                    <div class="stat-value">${stats.beltGood}</div>
                 </div>
             `;
         }
 
         // ==================== EXPORT FUNCTIONS ====================
         function exportCSV() {
-            let csv = 'Date,Shift,Time,Inspector,Area,Location,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes\n';
+            let csv = 'Date,Shift,Time,Inspector,Area,Section,Type,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes,Walls Status,FIA Status,Belt Status,Web Status,Last Cleaned,Last Emptied\n';
             const date = document.getElementById('date')?.value || '';
             const shift = document.getElementById('shift')?.value || '';
             const time = document.getElementById('time')?.value || '';
@@ -1003,14 +1521,49 @@
                     const key = `${area.id}-${loc.replace(/\s+/g, '_')}`;
                     const d = data[key] || {};
                     const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","${d.status || ''}","${d.score || ''}","${d.deepClean || false}","${d.routineClean || false}","${d.manpower || ''}","${d.material || ''}","${d.statedStaff || ''}","${d.actualStaff || ''}","${diff}","${d.notes || ''}"\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","Location","${d.status || ''}","${d.score || ''}","${d.deepClean || false}","${d.routineClean || false}","${d.manpower || ''}","${d.material || ''}","${d.statedStaff || ''}","${d.actualStaff || ''}","${diff}","${d.notes || ''}","","","","",""\n`;
                 });
+                
+                // Export walls data
+                if (area.hasWalls) {
+                    const wallsKey = `${area.id}-walls`;
+                    const wallsData = data[wallsKey] || {};
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Walls","Walls","","","","","","","","","","${wallsData.wallsStatus || ''}","","","","",""\n`;
+                }
+                
+                // Export toilet walls
+                if (area.hasToilets) {
+                    const toiletWallsKey = `${area.id}-toilet-walls`;
+                    const toiletWallsData = data[toiletWallsKey] || {};
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Toilet Walls","Walls","","","","","","","","","","${toiletWallsData.status || ''}","","","","",""\n`;
+                }
+                
+                // Export FIA counters
+                if (area.hasFIACounters) {
+                    const fiaKey = `${area.id}-fia-counters`;
+                    const fiaData = data[fiaKey] || {};
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","FIA Counters","FIA","${fiaData.status || ''}","","","","","","","","","","${fiaData.status || ''}","","","${fiaData.lastChecked || ''}",""\n`;
+                }
+                
+                // Export conveyor belts
+                if (area.hasConveyorBelt) {
+                    const beltKey = `${area.id}-conveyor-belt`;
+                    const beltData = data[beltKey] || {};
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Conveyor Belt","Belt","${beltData.status || ''}","","","","","","","","","","","${beltData.status || ''}","","${beltData.lastCleaned || ''}",""\n`;
+                }
+                
+                // Export web cleaning
+                if (area.hasWebClean) {
+                    const webKey = `${area.id}-web-clean`;
+                    const webData = data[webKey] || {};
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Web Cleaning","Web","${webData.status || ''}","","","","","","","","","","","","${webData.status || ''}","${webData.lastCleaned || ''}",""\n`;
+                }
                 
                 // Export dustbins data
                 if (area.hasDustbins) {
                     const dustbinsKey = `${area.id}-dustbins`;
                     const dustbinsData = data[dustbinsKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Dustbins","","","","","","","","","","Full: ${dustbinsData.fullOfGarbage || ''}, Cleaned: ${dustbinsData.cleaned || ''}, Emptied: ${dustbinsData.emptiedTimely || ''}, Last: ${dustbinsData.lastEmptied || ''}, Notes: ${dustbinsData.notes || ''}"\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Dustbins","Dustbins","","","","","","","","","","","","","","","${dustbinsData.lastEmptied || ''}"\n`;
                 }
             });
 
