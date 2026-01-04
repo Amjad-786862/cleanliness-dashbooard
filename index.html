@@ -18,21 +18,27 @@
     
     <title>Airport Cleanliness</title>
     
-    <!-- Inline Manifest (no external file needed) -->
-    <link rel="manifest" id="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFpcnBvcnQgQ2xlYW5saW5lc3MiLAogICJzaG9ydF9uYW1lIjogIkFpcnBvcnRDbGVhbiIsCiAgImRlc2NyaXB0aW9uIjogIkRhaWx5IEFpcnBvcnQgQ2xlYW5saW5lc3MgSW5zcGVjdGlvbiAmIE1vbml0b3JpbmciLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMyNTYzZWIiLAogICJ0aGVtZV9jb2xvciI6ICIjMjU2M2ViIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29BQUFBTlNVaEVVZ0FBQUVjQUFBQjRDQVlBQUFBRG8yVFJBQUFBQVhOU1IwSUFyczRjNlFBQUFBUm5RVTFCQUFDeGp3djhZUVVBQUFBSmNFaFpjd0FBRHNNQUFBN0RBY2R2cUdRQUFBQmwwV0ZsYUFBTTdTQUFBSndDR0VtVm1BQUFDQUFBQUlBQklTVVJCVkFBQUFEMGxXRWxwQUFBQUFTVVZPUks1Q1lJST0iLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFFY0FBQUI0Q0FZQUFBQUNhVFkwQUFBQUFYRlFaVVFBQUE0VUFBQUJJQ0VmRmFIUjBjSE02THk5M2QzY3Vkek11YjNKbkx6SXdNREU2Y0hOd0FBQUFBRWxGVGtTdVFtQ0MiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdCn0=">
+    <!-- Inline Manifest -->
+    <link rel="manifest" id="manifest">
     
-    <!-- Simple icons using emoji as fallback -->
+    <!-- Simple icon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
     
     <style>
         /* Reset and base styles */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 20px;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
         }
         
         /* Header */
@@ -40,16 +46,27 @@
             background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%); 
             color: white; 
             padding: 16px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
             position: sticky; 
             top: 0; 
             z-index: 100; 
         }
-        .header h1 { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
-        .header p { font-size: 12px; opacity: 0.9; }
+        .header h1 { 
+            font-size: clamp(18px, 5vw, 22px); 
+            font-weight: bold; 
+            margin-bottom: 4px; 
+        }
+        .header p { 
+            font-size: 12px; 
+            opacity: 0.9; 
+        }
         
         /* Content */
-        .content { padding: 16px; }
+        .content { 
+            padding: 12px; 
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         
         /* Form Card */
         .card { 
@@ -57,26 +74,32 @@
             border-radius: 12px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
             padding: 16px; 
-            margin-bottom: 12px; 
+            margin-bottom: 12px;
+            width: 100%;
+            overflow: hidden;
         }
         
         /* Input Groups */
-        .input-group { margin-bottom: 12px; }
+        .input-group { 
+            margin-bottom: 12px; 
+            width: 100%;
+        }
         .input-group label { 
             display: block; 
             font-size: 14px; 
             font-weight: 500; 
             color: #374151; 
-            margin-bottom: 4px; 
+            margin-bottom: 6px; 
         }
         .input-group input, 
         .input-group select, 
         .input-group textarea { 
             width: 100%; 
-            padding: 8px 12px; 
+            padding: 10px 12px; 
             border: 1px solid #d1d5db; 
             border-radius: 8px; 
-            font-size: 14px; 
+            font-size: 15px; 
+            -webkit-appearance: none;
         }
         .input-group input:focus, 
         .input-group select:focus, 
@@ -89,22 +112,28 @@
         /* Buttons */
         .btn-group { 
             display: flex; 
+            flex-wrap: wrap;
             gap: 8px; 
             margin-top: 16px; 
+            width: 100%;
         }
         .btn { 
-            flex: 1; 
-            padding: 10px 12px; 
+            flex: 1 1 calc(50% - 8px);
+            min-width: 0;
+            padding: 12px; 
             border: none; 
             border-radius: 8px; 
-            font-size: 13px; 
+            font-size: 14px; 
             font-weight: 600; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            gap: 4px; 
+            gap: 6px; 
             transition: all 0.2s; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .btn:active { transform: scale(0.98); }
         .btn-green { background: #16a34a; color: white; }
@@ -114,16 +143,22 @@
         /* Stats Grid */
         .stats-grid { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(2, 1fr); 
             gap: 8px; 
             margin-bottom: 12px; 
+        }
+        @media (min-width: 480px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         .stat-card { 
             background: white; 
             border-radius: 8px; 
             padding: 12px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
             text-align: center; 
+            min-width: 0;
         }
         .stat-card.excellent { background: #16a34a; color: white; }
         .stat-card.good { background: #2563eb; color: white; }
@@ -131,8 +166,19 @@
         .stat-card.poor { background: #dc2626; color: white; }
         .stat-card.pending { background: #6b7280; color: white; }
         .stat-card.avg { background: #4f46e5; color: white; }
-        .stat-label { font-size: 11px; opacity: 0.9; margin-bottom: 4px; }
-        .stat-value { font-size: 24px; font-weight: bold; }
+        .stat-label { 
+            font-size: 11px; 
+            opacity: 0.9; 
+            margin-bottom: 4px; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stat-value { 
+            font-size: 20px; 
+            font-weight: bold; 
+            line-height: 1.2;
+        }
         
         /* Sections */
         .section { 
@@ -141,6 +187,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
             margin-bottom: 12px; 
             overflow: hidden; 
+            width: 100%;
         }
         .section-header { 
             background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%); 
@@ -151,8 +198,14 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
+            font-size: 15px;
         }
-        .section-content { padding: 12px; display: none; }
+        .section-content { 
+            padding: 12px; 
+            display: none; 
+            width: 100%;
+            overflow: hidden;
+        }
         .section-content.active { display: block; }
         
         /* Location Cards */
@@ -162,49 +215,82 @@
             border-radius: 8px; 
             padding: 12px; 
             margin-bottom: 12px; 
+            width: 100%;
+            overflow: hidden;
         }
         .location-title { 
             font-weight: 600; 
             color: #1f2937; 
             font-size: 14px; 
             margin-bottom: 12px; 
+            line-height: 1.4;
         }
+        
+        /* Grids - Responsive */
         .grid-2 { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
             gap: 8px; 
             margin-bottom: 8px; 
+            width: 100%;
         }
         .grid-3 { 
             display: grid; 
-            grid-template-columns: 1fr 1fr 1fr; 
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 8px; 
             margin-bottom: 8px; 
+            width: 100%;
         }
         
         /* Checkbox Groups */
-        .checkbox-group { display: flex; gap: 12px; margin-bottom: 8px; }
-        .checkbox-label { display: flex; align-items: center; font-size: 12px; }
-        .checkbox-label input { margin-right: 4px; }
+        .checkbox-group { 
+            display: flex; 
+            flex-wrap: wrap;
+            gap: 12px; 
+            margin-bottom: 12px; 
+            width: 100%;
+        }
+        .checkbox-label { 
+            display: flex; 
+            align-items: center; 
+            font-size: 13px; 
+            flex: 1 1 auto;
+            min-width: 120px;
+        }
+        .checkbox-label input { 
+            margin-right: 6px; 
+            min-width: 18px;
+            height: 18px;
+        }
         
         /* Status Colors */
+        select.status { 
+            color: white; 
+            font-weight: 600; 
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+        }
         .status-excellent { background: #16a34a; }
         .status-good { background: #2563eb; }
         .status-fair { background: #eab308; }
         .status-poor { background: #dc2626; }
         .status-pending { background: #6b7280; }
-        select.status { color: white; font-weight: 600; }
         
         /* Difference Display */
         .diff-positive { background: #dcfce7; color: #166534; }
         .diff-negative { background: #fee2e2; color: #991b1b; }
         .diff-neutral { background: #f3f4f6; color: #6b7280; }
         .diff-display { 
-            padding: 8px 12px; 
-            border-radius: 8px; 
-            font-size: 12px; 
+            padding: 8px 4px; 
+            border-radius: 6px; 
+            font-size: 13px; 
             font-weight: 600; 
             text-align: center; 
+            min-width: 0;
+            overflow: hidden;
         }
         
         /* Print Styles */
@@ -214,22 +300,16 @@
             .card { box-shadow: none; border: 1px solid #ddd; }
         }
         
-        /* Icons */
-        .icon { 
-            width: 16px; 
-            height: 16px; 
-            stroke: currentColor; 
-            stroke-width: 2; 
-            fill: none; 
-        }
-        
-        /* Dustbins Section */
+        /* ==================== DUSTBINS SECTION - FIXED ==================== */
         .dustbins-check-group {
             background: #fef3c7;
             border: 1px solid #fbbf24;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 12px;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         .dustbins-title {
             font-weight: 600;
@@ -239,18 +319,35 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            width: 100%;
         }
+        
+        /* Fixed Grid - Single column on mobile */
         .dustbins-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 12px;
+            width: 100%;
         }
+        
+        /* On larger screens, show 2 columns */
+        @media (min-width: 480px) {
+            .dustbins-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+        
         .dustbin-criteria {
             background: white;
             border: 1px solid #fbbf24;
             border-radius: 6px;
             padding: 10px;
+            min-width: 0;
+            overflow: hidden;
+            box-sizing: border-box;
         }
         .criteria-title {
             font-weight: 600;
@@ -260,24 +357,64 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .criteria-options {
             display: flex;
-            gap: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
         }
         .criteria-option {
             display: flex;
             align-items: center;
             gap: 4px;
             cursor: pointer;
+            flex: 1;
+            min-width: 60px;
         }
         .criteria-option input[type="radio"] {
             margin: 0;
+            min-width: 18px;
+            height: 18px;
         }
-        .yes-option { color: #16a34a; }
-        .no-option { color: #dc2626; }
+        .yes-option { 
+            color: #16a34a; 
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .no-option { 
+            color: #dc2626; 
+            font-size: 12px;
+            white-space: nowrap;
+        }
         
-        /* GitHub Pages Fix */
+        /* Date input in dustbins */
+        .dustbin-criteria input[type="datetime-local"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        /* Dustbins notes textarea */
+        .dustbins-notes {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+            min-height: 60px;
+            resize: vertical;
+            margin-top: 8px;
+        }
+        
+        /* Footer */
         .github-fix {
             position: fixed;
             bottom: 0;
@@ -287,11 +424,67 @@
             border-top: 1px solid #e5e7eb;
             padding: 10px;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #6b7280;
             z-index: 999;
         }
+        
+        /* Mobile optimizations */
+        @media (max-width: 360px) {
+            .btn {
+                font-size: 12px;
+                padding: 10px 6px;
+            }
+            .stat-value {
+                font-size: 18px;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .criteria-options {
+                gap: 6px;
+            }
+        }
+        
+        /* Ensure no horizontal scrolling */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* Touch-friendly sizes */
+        input, select, textarea, button {
+            font-size: 16px !important; /* Prevents iOS zoom */
+            min-height: 44px; /* Apple recommended touch target */
+        }
+        
+        .checkbox-label input[type="checkbox"],
+        .criteria-option input[type="radio"] {
+            min-height: 20px;
+            min-width: 20px;
+        }
     </style>
+    
+    <script>
+        // Set manifest dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const manifest = {
+                "name": "Airport Cleanliness",
+                "short_name": "AirportClean",
+                "description": "Daily Airport Cleanliness Inspection",
+                "start_url": "./",
+                "display": "standalone",
+                "background_color": "#2563eb",
+                "theme_color": "#2563eb",
+                "orientation": "portrait",
+                "icons": []
+            };
+            
+            const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+            const url = URL.createObjectURL(blob);
+            document.getElementById('manifest').href = url;
+        });
+    </script>
 </head>
 <body>
     <div class="header">
@@ -336,11 +529,11 @@
         </div>
 
         <div class="stats-grid" id="stats">
-            <!-- Stats will be populated by JavaScript -->
+            <!-- Stats will be populated -->
         </div>
 
         <div id="sections">
-            <!-- Sections will be populated by JavaScript -->
+            <!-- Sections will be populated -->
         </div>
     </div>
     
@@ -365,29 +558,26 @@
             },
             { 
                 id: 'international', 
-                name: '🌍 International Arrival Hall', 
+                name: '🌍 International Arrival', 
                 locations: [
-                    'Immigration Area (General)',
-                    'Immigration Area - Gents Toilet',
-                    'Immigration Area - Ladies Toilet',
-                    'Intl. Arrival Hall - Gents Toilet',
-                    'Intl. Arrival Hall - Ladies Toilet',
-                    'Intl. Arrival Hall - Wheelchair Toilet',
-                    'Belts Area',
-                    'Exit Area Towards Concourse Hall'
+                    'Immigration Area',
+                    'Intl. Arrival Hall',
+                    'Gents Toilet',
+                    'Ladies Toilet',
+                    'Wheelchair Toilet',
+                    'Belts Area'
                 ],
                 hasDustbins: true
             },
             { 
                 id: 'domestic', 
-                name: '🏠 Domestic Arrival Hall', 
+                name: '🏠 Domestic Arrival', 
                 locations: [
-                    'Dom. Arrival Hall (General)',
-                    'Dom. Arrival Hall - Gents Toilet',
-                    'Dom. Arrival Hall - Ladies Toilet',
-                    'Dom. Arrival Hall - Wheelchair Toilet',
-                    'Belts Area',
-                    'Exit Area Towards Concourse Hall'
+                    'Dom. Arrival Hall',
+                    'Gents Toilet',
+                    'Ladies Toilet',
+                    'Wheelchair Toilet',
+                    'Belts Area'
                 ],
                 hasDustbins: true
             },
@@ -397,11 +587,9 @@
                 locations: [
                     'Concourse North Side',
                     'Concourse South Side',
-                    'Concourse - Gents Toilet',
-                    'Concourse - Ladies Toilet',
-                    'Concourse - Wheelchair Toilet',
-                    'Concourse - Janitorial Room (North)',
-                    'Concourse - Janitorial Room (South)'
+                    'Gents Toilet',
+                    'Ladies Toilet',
+                    'Wheelchair Toilet'
                 ],
                 hasDustbins: true
             },
@@ -411,14 +599,8 @@
                 locations: [
                     'Parking Area North',
                     'Parking Area South',
-                    'Parking Area Central',
-                    'VVIP Lanes & Driveways',
-                    'Parking Entry/Exit Points',
-                    'Entry Roads',
-                    'Exit Roads',
-                    'Cargo Roads',
-                    'Mess Road',
-                    'Old Car Parking Area'
+                    'Parking Central',
+                    'Entry/Exit Points'
                 ],
                 hasDustbins: true
             }
@@ -431,12 +613,18 @@
             // Load saved data
             const saved = localStorage.getItem('airportCleanlinessData');
             if (saved) {
-                data = JSON.parse(saved);
-            } else {
-                // Initialize with default data
-                areas.forEach(area => {
-                    area.locations.forEach(loc => {
-                        const key = `${area.id}-${loc.replace(/\s+/g, '-')}`;
+                try {
+                    data = JSON.parse(saved);
+                } catch (e) {
+                    data = {};
+                }
+            }
+            
+            // Initialize with default data if needed
+            areas.forEach(area => {
+                area.locations.forEach(loc => {
+                    const key = `${area.id}-${loc.replace(/\s+/g, '_')}`;
+                    if (!data[key]) {
                         data[key] = { 
                             status: 'pending', 
                             score: '', 
@@ -448,11 +636,13 @@
                             actualStaff: '', 
                             notes: ''
                         };
-                    });
-                    
-                    // Initialize dustbins data
-                    if (area.hasDustbins) {
-                        const dustbinsKey = `${area.id}-dustbins`;
+                    }
+                });
+                
+                // Initialize dustbins data
+                if (area.hasDustbins) {
+                    const dustbinsKey = `${area.id}-dustbins`;
+                    if (!data[dustbinsKey]) {
                         data[dustbinsKey] = { 
                             fullOfGarbage: 'pending',
                             cleaned: 'pending',
@@ -461,45 +651,51 @@
                             notes: ''
                         };
                     }
-                });
-            }
+                }
+            });
 
             // Set today's date
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('date').value = localStorage.getItem('inspectionDate') || today;
-            document.getElementById('shift').value = localStorage.getItem('inspectionShift') || '';
-            document.getElementById('time').value = localStorage.getItem('inspectionTime') || '';
-            document.getElementById('inspector').value = localStorage.getItem('inspectionInspector') || '';
+            const dateEl = document.getElementById('date');
+            if (dateEl) dateEl.value = localStorage.getItem('inspectionDate') || today;
+            
+            // Load other form data
+            const shiftEl = document.getElementById('shift');
+            const timeEl = document.getElementById('time');
+            const inspectorEl = document.getElementById('inspector');
+            
+            if (shiftEl) shiftEl.value = localStorage.getItem('inspectionShift') || '';
+            if (timeEl) timeEl.value = localStorage.getItem('inspectionTime') || '';
+            if (inspectorEl) inspectorEl.value = localStorage.getItem('inspectionInspector') || '';
 
             // Render everything
             renderSections();
             updateStats();
 
             // Auto-save form data
-            document.getElementById('date').addEventListener('change', e => {
+            if (dateEl) dateEl.addEventListener('change', e => {
                 localStorage.setItem('inspectionDate', e.target.value);
             });
-            document.getElementById('shift').addEventListener('change', e => {
+            if (shiftEl) shiftEl.addEventListener('change', e => {
                 localStorage.setItem('inspectionShift', e.target.value);
             });
-            document.getElementById('time').addEventListener('change', e => {
+            if (timeEl) timeEl.addEventListener('change', e => {
                 localStorage.setItem('inspectionTime', e.target.value);
             });
-            document.getElementById('inspector').addEventListener('input', e => {
+            if (inspectorEl) inspectorEl.addEventListener('input', e => {
                 localStorage.setItem('inspectionInspector', e.target.value);
             });
             
-            // GitHub Pages fix - ensure content loads
-            setTimeout(() => {
-                if (document.getElementById('sections').innerHTML === '') {
-                    renderSections();
-                }
-            }, 100);
+            // Ensure mobile viewport works
+            document.body.style.width = '100%';
+            document.body.style.overflowX = 'hidden';
         }
 
         // ==================== RENDER FUNCTIONS ====================
         function renderSections() {
             const container = document.getElementById('sections');
+            if (!container) return;
+            
             container.innerHTML = areas.map(area => `
                 <div class="section">
                     <div class="section-header" onclick="toggleSection('${area.id}')">
@@ -528,7 +724,7 @@
                         <div class="dustbins-grid">
                             <div class="dustbin-criteria">
                                 <div class="criteria-title">
-                                    📦 Full of Garbage?
+                                    📦 Full?
                                 </div>
                                 <div class="criteria-options">
                                     <label class="criteria-option">
@@ -543,18 +739,12 @@
                                             onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'no')">
                                         <span class="no-option">❌ No</span>
                                     </label>
-                                    <label class="criteria-option">
-                                        <input type="radio" name="${dustbinsKey}-full" value="pending" 
-                                            ${dustbinsData.fullOfGarbage === 'pending' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'pending')">
-                                        <span>⏱️ Pending</span>
-                                    </label>
                                 </div>
                             </div>
                             
                             <div class="dustbin-criteria">
                                 <div class="criteria-title">
-                                    🧹 Properly Cleaned?
+                                    🧹 Clean?
                                 </div>
                                 <div class="criteria-options">
                                     <label class="criteria-option">
@@ -569,18 +759,12 @@
                                             onchange="updateDustbins('${area.id}', 'cleaned', 'no')">
                                         <span class="no-option">❌ No</span>
                                     </label>
-                                    <label class="criteria-option">
-                                        <input type="radio" name="${dustbinsKey}-cleaned" value="pending" 
-                                            ${dustbinsData.cleaned === 'pending' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'cleaned', 'pending')">
-                                        <span>⏱️ Pending</span>
-                                    </label>
                                 </div>
                             </div>
                             
                             <div class="dustbin-criteria">
                                 <div class="criteria-title">
-                                    ⏰ Emptied Timely?
+                                    ⏰ On Time?
                                 </div>
                                 <div class="criteria-options">
                                     <label class="criteria-option">
@@ -595,31 +779,22 @@
                                             onchange="updateDustbins('${area.id}', 'emptiedTimely', 'no')">
                                         <span class="no-option">❌ No</span>
                                     </label>
-                                    <label class="criteria-option">
-                                        <input type="radio" name="${dustbinsKey}-emptied" value="pending" 
-                                            ${dustbinsData.emptiedTimely === 'pending' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'emptiedTimely', 'pending')">
-                                        <span>⏱️ Pending</span>
-                                    </label>
                                 </div>
                             </div>
                             
                             <div class="dustbin-criteria">
                                 <div class="criteria-title">
-                                    📅 Last Emptied
+                                    📅 Last Empty
                                 </div>
                                 <input type="datetime-local" 
                                     value="${dustbinsData.lastEmptied || ''}"
-                                    onchange="updateDustbinsLastEmptied('${area.id}', this.value)"
-                                    style="width: 100%; padding: 6px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    onchange="updateDustbinsLastEmptied('${area.id}', this.value)">
                             </div>
                         </div>
                         
-                        <div class="input-group" style="margin-top: 8px;">
-                            <label>📝 Dustbins Notes</label>
-                            <textarea rows="2" placeholder="Additional notes about dustbins..."
-                                onchange="updateDustbinsNotes('${area.id}', this.value)"
-                                style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">${dustbinsData.notes || ''}</textarea>
+                        <div style="margin-top: 8px;">
+                            <textarea class="dustbins-notes" placeholder="Dustbins notes..."
+                                onchange="updateDustbinsNotes('${area.id}', this.value)">${dustbinsData.notes || ''}</textarea>
                         </div>
                     </div>
                 `;
@@ -632,7 +807,7 @@
         }
 
         function renderLocation(areaId, location) {
-            const key = `${areaId}-${location.replace(/\s+/g, '-')}`;
+            const key = `${areaId}-${location.replace(/\s+/g, '_')}`;
             const d = data[key] || {};
             const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
             const diffClass = diff < 0 ? 'diff-negative' : diff > 0 ? 'diff-positive' : 'diff-neutral';
@@ -643,7 +818,8 @@
                     <div class="grid-2">
                         <div class="input-group">
                             <label>Status</label>
-                            <select class="status status-${d.status}" onchange="updateData('${key}', 'status', this.value)">
+                            <select class="status status-${d.status || 'pending'}" 
+                                onchange="updateData('${key}', 'status', this.value)">
                                 <option value="pending" ${d.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
                                 <option value="excellent" ${d.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
                                 <option value="good" ${d.status === 'good' ? 'selected' : ''}>👍 Good</option>
@@ -734,6 +910,8 @@
         // ==================== UI FUNCTIONS ====================
         function toggleSection(id) {
             const content = document.getElementById(`content-${id}`);
+            if (!content) return;
+            
             const isActive = content.classList.contains('active');
             
             // Close all other sections
@@ -754,7 +932,7 @@
                 good: values.filter(v => v.status === 'good').length,
                 fair: values.filter(v => v.status === 'fair').length,
                 poor: values.filter(v => v.status === 'poor').length,
-                pending: values.filter(v => v.status === 'pending').length
+                pending: values.filter(v => v.status === 'pending' || !v.status).length
             };
             
             const scores = values.filter(v => v.score !== '' && v.score !== undefined).map(v => parseInt(v.score) || 0);
@@ -769,6 +947,8 @@
             };
 
             const statsContainer = document.getElementById('stats');
+            if (!statsContainer) return;
+            
             statsContainer.innerHTML = `
                 <div class="stat-card excellent">
                     <div class="stat-label">Excellent</div>
@@ -795,15 +975,15 @@
                     <div class="stat-value">${avgScore}%</div>
                 </div>
                 <div class="stat-card ${dustbinStats.fullYes === 0 ? 'good' : 'poor'}">
-                    <div class="stat-label">Dustbins Full</div>
+                    <div class="stat-label">Full Bins</div>
                     <div class="stat-value">${dustbinStats.fullYes}</div>
                 </div>
-                <div class="stat-card ${dustbinStats.cleanedYes === areas.filter(a => a.hasDustbins).length ? 'good' : 'fair'}">
-                    <div class="stat-label">Dustbins Clean</div>
+                <div class="stat-card ${dustbinStats.cleanedYes > 0 ? 'good' : 'fair'}">
+                    <div class="stat-label">Clean Bins</div>
                     <div class="stat-value">${dustbinStats.cleanedYes}</div>
                 </div>
-                <div class="stat-card ${dustbinStats.emptiedYes === areas.filter(a => a.hasDustbins).length ? 'good' : 'fair'}">
-                    <div class="stat-label">Emptied Timely</div>
+                <div class="stat-card ${dustbinStats.emptiedYes > 0 ? 'good' : 'fair'}">
+                    <div class="stat-label">On Time</div>
                     <div class="stat-value">${dustbinStats.emptiedYes}</div>
                 </div>
             `;
@@ -812,15 +992,15 @@
         // ==================== EXPORT FUNCTIONS ====================
         function exportCSV() {
             let csv = 'Date,Shift,Time,Inspector,Area,Location,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes\n';
-            const date = document.getElementById('date').value;
-            const shift = document.getElementById('shift').value;
-            const time = document.getElementById('time').value;
-            const inspector = document.getElementById('inspector').value;
+            const date = document.getElementById('date')?.value || '';
+            const shift = document.getElementById('shift')?.value || '';
+            const time = document.getElementById('time')?.value || '';
+            const inspector = document.getElementById('inspector')?.value || '';
 
             areas.forEach(area => {
                 // Export locations
                 area.locations.forEach(loc => {
-                    const key = `${area.id}-${loc.replace(/\s+/g, '-')}`;
+                    const key = `${area.id}-${loc.replace(/\s+/g, '_')}`;
                     const d = data[key] || {};
                     const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
                     csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","${d.status || ''}","${d.score || ''}","${d.deepClean || false}","${d.routineClean || false}","${d.manpower || ''}","${d.material || ''}","${d.statedStaff || ''}","${d.actualStaff || ''}","${diff}","${d.notes || ''}"\n`;
@@ -838,14 +1018,14 @@
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `airport-cleanliness-${date}.csv`);
+            link.setAttribute('download', `airport-cleanliness-${date || 'report'}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
         function resetAll() {
-            if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+            if (confirm('Reset all data? This cannot be undone.')) {
                 localStorage.clear();
                 location.reload();
             }
@@ -859,12 +1039,9 @@
             init();
         }
         
-        // GitHub Pages specific fix
-        window.addEventListener('load', function() {
-            // Force re-render if sections are empty
-            if (document.getElementById('sections').innerHTML.trim() === '') {
-                setTimeout(init, 500);
-            }
+        // Mobile viewport fix
+        window.addEventListener('resize', function() {
+            document.body.style.width = '100%';
         });
     </script>
 </body>
