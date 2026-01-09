@@ -302,6 +302,30 @@
             overflow: hidden;
         }
         
+        /* Time Checked Styles */
+        .time-checked-container {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 6px 10px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-left: 3px solid #2563eb;
+            width: fit-content;
+        }
+        .time-checked-label {
+            font-weight: 500;
+            color: #374151;
+        }
+        .time-checked-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2563eb;
+        }
+        
         /* Print Styles */
         @media print { 
             .no-print { display: none !important; } 
@@ -791,6 +815,58 @@
 
         let data = {};
 
+        // ==================== TIME CHECKED FUNCTIONS ====================
+        function getCurrentTimeChecked() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        function getCurrentDateChecked() {
+            const now = new Date();
+            return now.toLocaleDateString('en-GB');
+        }
+
+        function addTimeChecked(elementId, label) {
+            const section = document.getElementById(elementId);
+            if (!section) return;
+            
+            // Remove existing time checked if any
+            const existingTime = section.querySelector('.time-checked-container');
+            if (existingTime) {
+                existingTime.remove();
+            }
+            
+            // Create new time checked element
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'time-checked-container';
+            const date = getCurrentDateChecked();
+            const time = getCurrentTimeChecked();
+            timeDiv.innerHTML = `
+                <span class="time-checked-label">⏰ Time Checked:</span>
+                <span class="time-checked-value">${date} ${time}</span>
+            `;
+            
+            // Append to the section
+            section.appendChild(timeDiv);
+            
+            // Save time checked to data
+            const areaId = elementId.split('-')[0];
+            const location = label.replace(/\s+/g, '_');
+            const key = `${areaId}-${location}`;
+            if (!data[key]) data[key] = {};
+            data[key].timeChecked = `${date} ${time}`;
+            localStorage.setItem('airportCleanlinessData', JSON.stringify(data));
+        }
+
+        function updateDataWithTimeChecked(key, field, value, elementId, label) {
+            updateData(key, field, value);
+            addTimeChecked(elementId, label);
+        }
+
         // ==================== INITIALIZATION ====================
         function init() {
             // Load saved data
@@ -817,7 +893,8 @@
                             material: '', 
                             statedStaff: '', 
                             actualStaff: '', 
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
                         };
                     }
                 });
@@ -831,7 +908,8 @@
                             cleaned: 'pending',
                             emptiedTimely: 'pending',
                             lastEmptied: '',
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
                         };
                     }
                 }
@@ -842,7 +920,8 @@
                     if (!data[wallsKey]) {
                         data[wallsKey] = { 
                             wallsStatus: 'pending',
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
                         };
                     }
                 }
@@ -853,7 +932,8 @@
                     if (!data[fiaKey]) {
                         data[fiaKey] = { 
                             status: 'pending',
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
                         };
                     }
                 }
@@ -865,7 +945,8 @@
                         data[beltKey] = { 
                             status: 'pending',
                             lastCleaned: '',
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
                         };
                     }
                 }
@@ -877,7 +958,19 @@
                         data[webKey] = { 
                             status: 'pending',
                             lastCleaned: '',
-                            notes: ''
+                            notes: '',
+                            timeChecked: ''
+                        };
+                    }
+                }
+                
+                // Initialize toilet walls data
+                if (area.hasToilets) {
+                    const toiletWallsKey = `${area.id}-toilet-walls`;
+                    if (!data[toiletWallsKey]) {
+                        data[toiletWallsKey] = { 
+                            status: 'pending',
+                            timeChecked: ''
                         };
                     }
                 }
@@ -945,8 +1038,9 @@
             if (area.hasWalls) {
                 const wallsKey = `${area.id}-walls`;
                 const wallsData = data[wallsKey] || {};
+                const wallsElementId = `${area.id}-walls-section`;
                 content += `
-                    <div class="walls-check-group">
+                    <div class="walls-check-group" id="${wallsElementId}">
                         <div class="walls-title">
                             🧱 Walls Condition
                         </div>
@@ -954,45 +1048,59 @@
                             <label class="wall-option">
                                 <input type="radio" name="${wallsKey}" value="clean" 
                                     ${wallsData.wallsStatus === 'clean' ? 'checked' : ''}
-                                    onchange="updateWallsStatus('${area.id}', 'clean')">
+                                    onchange="updateWallsStatus('${area.id}', 'clean', '${wallsElementId}', 'Walls Condition')">
                                 <span class="wall-tick">✅ Clean</span>
                             </label>
                             <label class="wall-option">
                                 <input type="radio" name="${wallsKey}" value="dirty" 
                                     ${wallsData.wallsStatus === 'dirty' ? 'checked' : ''}
-                                    onchange="updateWallsStatus('${area.id}', 'dirty')">
+                                    onchange="updateWallsStatus('${area.id}', 'dirty', '${wallsElementId}', 'Walls Condition')">
                                 <span class="wall-cross">❌ Dirty</span>
                             </label>
                         </div>
                         <div style="margin-top: 8px;">
                             <textarea placeholder="Walls condition notes..."
-                                onchange="updateWallsNotes('${area.id}', this.value)">${wallsData.notes || ''}</textarea>
+                                onchange="updateWallsNotes('${area.id}', this.value, '${wallsElementId}', 'Walls Condition')">${wallsData.notes || ''}</textarea>
                         </div>
+                        ${wallsData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${wallsData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
             
             // Add toilets walls check if area has toilets
             if (area.hasToilets && area.id !== 'level0') {
+                const toiletWallsElementId = `${area.id}-toilet-walls-section`;
+                const toiletWallsData = data[`${area.id}-toilet-walls`] || {};
                 content += `
-                    <div class="walls-check-group">
+                    <div class="walls-check-group" id="${toiletWallsElementId}">
                         <div class="walls-title">
                             🚽 Toilet Walls Condition
                         </div>
                         <div class="walls-options">
                             <label class="wall-option">
                                 <input type="radio" name="${area.id}-toilet-walls" value="clean" 
-                                    ${data[`${area.id}-toilet-walls`]?.status === 'clean' ? 'checked' : ''}
-                                    onchange="updateToiletWalls('${area.id}', 'clean')">
+                                    ${toiletWallsData.status === 'clean' ? 'checked' : ''}
+                                    onchange="updateToiletWalls('${area.id}', 'clean', '${toiletWallsElementId}', 'Toilet Walls')">
                                 <span class="wall-tick">✅ Clean</span>
                             </label>
                             <label class="wall-option">
                                 <input type="radio" name="${area.id}-toilet-walls" value="dirty" 
-                                    ${data[`${area.id}-toilet-walls`]?.status === 'dirty' ? 'checked' : ''}
-                                    onchange="updateToiletWalls('${area.id}', 'dirty')">
+                                    ${toiletWallsData.status === 'dirty' ? 'checked' : ''}
+                                    onchange="updateToiletWalls('${area.id}', 'dirty', '${toiletWallsElementId}', 'Toilet Walls')">
                                 <span class="wall-cross">❌ Dirty</span>
                             </label>
                         </div>
+                        ${toiletWallsData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${toiletWallsData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
@@ -1001,8 +1109,9 @@
             if (area.hasFIACounters) {
                 const fiaKey = `${area.id}-fia-counters`;
                 const fiaData = data[fiaKey] || {};
+                const fiaElementId = `${area.id}-fia-section`;
                 content += `
-                    <div class="fia-counter-group">
+                    <div class="fia-counter-group" id="${fiaElementId}">
                         <div class="fia-counter-title">
                             🛂 Immigration FIA Counters
                         </div>
@@ -1010,7 +1119,7 @@
                             <div class="input-group">
                                 <label>Status</label>
                                 <select class="status status-${fiaData.status || 'pending'}" 
-                                    onchange="updateFIAStatus('${area.id}', this.value)">
+                                    onchange="updateFIAStatus('${area.id}', this.value, '${fiaElementId}', 'FIA Counters')">
                                     <option value="pending" ${fiaData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
                                     <option value="excellent" ${fiaData.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
                                     <option value="good" ${fiaData.status === 'good' ? 'selected' : ''}>👍 Good</option>
@@ -1029,6 +1138,12 @@
                             <textarea placeholder="FIA counters notes..."
                                 onchange="updateFIANotes('${area.id}', this.value)">${fiaData.notes || ''}</textarea>
                         </div>
+                        ${fiaData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${fiaData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
@@ -1037,8 +1152,9 @@
             if (area.hasConveyorBelt) {
                 const beltKey = `${area.id}-conveyor-belt`;
                 const beltData = data[beltKey] || {};
+                const beltElementId = `${area.id}-belt-section`;
                 content += `
-                    <div class="conveyor-belt-group">
+                    <div class="conveyor-belt-group" id="${beltElementId}">
                         <div class="conveyor-belt-title">
                             🔄 Conveyor Belt Steel Section
                         </div>
@@ -1046,7 +1162,7 @@
                             <div class="input-group">
                                 <label>Status</label>
                                 <select class="status status-${beltData.status || 'pending'}" 
-                                    onchange="updateBeltStatus('${area.id}', this.value)">
+                                    onchange="updateBeltStatus('${area.id}', this.value, '${beltElementId}', 'Conveyor Belt')">
                                     <option value="pending" ${beltData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
                                     <option value="excellent" ${beltData.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
                                     <option value="good" ${beltData.status === 'good' ? 'selected' : ''}>👍 Good</option>
@@ -1065,6 +1181,12 @@
                             <textarea placeholder="Conveyor belt notes..."
                                 onchange="updateBeltNotes('${area.id}', this.value)">${beltData.notes || ''}</textarea>
                         </div>
+                        ${beltData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${beltData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
@@ -1073,8 +1195,9 @@
             if (area.hasWebClean) {
                 const webKey = `${area.id}-web-clean`;
                 const webData = data[webKey] || {};
+                const webElementId = `${area.id}-web-section`;
                 content += `
-                    <div class="web-clean-group">
+                    <div class="web-clean-group" id="${webElementId}">
                         <div class="web-clean-title">
                             🕸️ Web Cleaning Status
                         </div>
@@ -1082,7 +1205,7 @@
                             <div class="input-group">
                                 <label>Status</label>
                                 <select class="status status-${webData.status || 'pending'}" 
-                                    onchange="updateWebCleanStatus('${area.id}', this.value)">
+                                    onchange="updateWebCleanStatus('${area.id}', this.value, '${webElementId}', 'Web Cleaning')">
                                     <option value="pending" ${webData.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
                                     <option value="completed" ${webData.status === 'completed' ? 'selected' : ''}>✅ Completed</option>
                                     <option value="in-progress" ${webData.status === 'in-progress' ? 'selected' : ''}>🔄 In Progress</option>
@@ -1100,6 +1223,12 @@
                             <textarea placeholder="Web cleaning notes..."
                                 onchange="updateWebCleanNotes('${area.id}', this.value)">${webData.notes || ''}</textarea>
                         </div>
+                        ${webData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${webData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
@@ -1108,8 +1237,9 @@
             if (area.hasDustbins) {
                 const dustbinsKey = `${area.id}-dustbins`;
                 const dustbinsData = data[dustbinsKey] || {};
+                const dustbinsElementId = `${area.id}-dustbins-section`;
                 content += `
-                    <div class="dustbins-check-group">
+                    <div class="dustbins-check-group" id="${dustbinsElementId}">
                         <div class="dustbins-title">
                             🗑️ Dustbins Inspection
                         </div>
@@ -1122,13 +1252,13 @@
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-full" value="yes" 
                                             ${dustbinsData.fullOfGarbage === 'yes' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'yes')">
+                                            onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'yes', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="yes-option">✅ Yes</span>
                                     </label>
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-full" value="no" 
                                             ${dustbinsData.fullOfGarbage === 'no' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'no')">
+                                            onchange="updateDustbins('${area.id}', 'fullOfGarbage', 'no', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="no-option">❌ No</span>
                                     </label>
                                 </div>
@@ -1142,13 +1272,13 @@
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-cleaned" value="yes" 
                                             ${dustbinsData.cleaned === 'yes' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'cleaned', 'yes')">
+                                            onchange="updateDustbins('${area.id}', 'cleaned', 'yes', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="yes-option">✅ Yes</span>
                                     </label>
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-cleaned" value="no" 
                                             ${dustbinsData.cleaned === 'no' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'cleaned', 'no')">
+                                            onchange="updateDustbins('${area.id}', 'cleaned', 'no', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="no-option">❌ No</span>
                                     </label>
                                 </div>
@@ -1162,13 +1292,13 @@
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-emptied" value="yes" 
                                             ${dustbinsData.emptiedTimely === 'yes' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'emptiedTimely', 'yes')">
+                                            onchange="updateDustbins('${area.id}', 'emptiedTimely', 'yes', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="yes-option">✅ Yes</span>
                                     </label>
                                     <label class="criteria-option">
                                         <input type="radio" name="${dustbinsKey}-emptied" value="no" 
                                             ${dustbinsData.emptiedTimely === 'no' ? 'checked' : ''}
-                                            onchange="updateDustbins('${area.id}', 'emptiedTimely', 'no')">
+                                            onchange="updateDustbins('${area.id}', 'emptiedTimely', 'no', '${dustbinsElementId}', 'Dustbins')">
                                         <span class="no-option">❌ No</span>
                                     </label>
                                 </div>
@@ -1188,12 +1318,20 @@
                             <textarea placeholder="Dustbins notes..."
                                 onchange="updateDustbinsNotes('${area.id}', this.value)">${dustbinsData.notes || ''}</textarea>
                         </div>
+                        ${dustbinsData.timeChecked ? `
+                            <div class="time-checked-container">
+                                <span class="time-checked-label">⏰ Time Checked:</span>
+                                <span class="time-checked-value">${dustbinsData.timeChecked}</span>
+                            </div>
+                        ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                     </div>
                 `;
             }
             
             // e) Special layout for Level 0 Big Section
             if (area.isLevel0) {
+                const level0ToiletWallsElementId = 'level0-toilet-walls-section';
+                const level0ToiletWallsData = data['level0-toilet-walls'] || {};
                 content += `
                     <div class="level0-grid">
                         <div class="level0-subsection">
@@ -1206,24 +1344,30 @@
                             ${renderLocation(area.id, 'Concourse Hall - Gents Toilet')}
                             ${renderLocation(area.id, 'Concourse Hall - Ladies Toilet')}
                             ${renderLocation(area.id, 'Concourse Hall - Wheelchair Toilet')}
-                            <div class="walls-check-group" style="margin-top: 10px;">
+                            <div class="walls-check-group" style="margin-top: 10px;" id="${level0ToiletWallsElementId}">
                                 <div class="walls-title">
                                     🧱 Toilet Walls Condition
                                 </div>
                                 <div class="walls-options">
                                     <label class="wall-option">
                                         <input type="radio" name="level0-toilet-walls" value="clean" 
-                                            ${data['level0-toilet-walls']?.status === 'clean' ? 'checked' : ''}
-                                            onchange="updateToiletWalls('level0', 'clean')">
+                                            ${level0ToiletWallsData.status === 'clean' ? 'checked' : ''}
+                                            onchange="updateToiletWalls('level0', 'clean', '${level0ToiletWallsElementId}', 'Toilet Walls')">
                                         <span class="wall-tick">✅ Clean</span>
                                     </label>
                                     <label class="wall-option">
                                         <input type="radio" name="level0-toilet-walls" value="dirty" 
-                                            ${data['level0-toilet-walls']?.status === 'dirty' ? 'checked' : ''}
-                                            onchange="updateToiletWalls('level0', 'dirty')">
+                                            ${level0ToiletWallsData.status === 'dirty' ? 'checked' : ''}
+                                            onchange="updateToiletWalls('level0', 'dirty', '${level0ToiletWallsElementId}', 'Toilet Walls')">
                                         <span class="wall-cross">❌ Dirty</span>
                                     </label>
                                 </div>
+                                ${level0ToiletWallsData.timeChecked ? `
+                                    <div class="time-checked-container">
+                                        <span class="time-checked-label">⏰ Time Checked:</span>
+                                        <span class="time-checked-value">${level0ToiletWallsData.timeChecked}</span>
+                                    </div>
+                                ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                             </div>
                         </div>
                         
@@ -1253,15 +1397,16 @@
             const d = data[key] || {};
             const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
             const diffClass = diff < 0 ? 'diff-negative' : diff > 0 ? 'diff-positive' : 'diff-neutral';
+            const elementId = key.replace(/_/g, '-');
 
             return `
-                <div class="location-card">
+                <div class="location-card" id="${elementId}">
                     <div class="location-title">${location}</div>
                     <div class="grid-2">
                         <div class="input-group">
                             <label>Status</label>
                             <select class="status status-${d.status || 'pending'}" 
-                                onchange="updateData('${key}', 'status', this.value)">
+                                onchange="updateDataWithTimeChecked('${key}', 'status', this.value, '${elementId}', '${location}')">
                                 <option value="pending" ${d.status === 'pending' ? 'selected' : ''}>⏱️ Pending</option>
                                 <option value="excellent" ${d.status === 'excellent' ? 'selected' : ''}>✅ Excellent</option>
                                 <option value="good" ${d.status === 'good' ? 'selected' : ''}>👍 Good</option>
@@ -1272,18 +1417,18 @@
                         <div class="input-group">
                             <label>Score (%)</label>
                             <input type="number" value="${d.score || ''}" min="0" max="100" placeholder="0-100" 
-                                onchange="updateData('${key}', 'score', this.value)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'score', this.value, '${elementId}', '${location}')" />
                         </div>
                     </div>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" ${d.deepClean ? 'checked' : ''} 
-                                onchange="updateData('${key}', 'deepClean', this.checked)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'deepClean', this.checked, '${elementId}', '${location}')" />
                             Deep Clean
                         </label>
                         <label class="checkbox-label">
                             <input type="checkbox" ${d.routineClean ? 'checked' : ''} 
-                                onchange="updateData('${key}', 'routineClean', this.checked)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'routineClean', this.checked, '${elementId}', '${location}')" />
                             Routine Clean
                         </label>
                     </div>
@@ -1291,24 +1436,24 @@
                         <div class="input-group">
                             <label>Manpower</label>
                             <input type="text" value="${d.manpower || ''}" 
-                                onchange="updateData('${key}', 'manpower', this.value)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'manpower', this.value, '${elementId}', '${location}')" />
                         </div>
                         <div class="input-group">
                             <label>Material</label>
                             <input type="text" value="${d.material || ''}" 
-                                onchange="updateData('${key}', 'material', this.value)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'material', this.value, '${elementId}', '${location}')" />
                         </div>
                     </div>
                     <div class="grid-3">
                         <div class="input-group">
                             <label>Stated Staff</label>
                             <input type="number" value="${d.statedStaff || ''}" 
-                                onchange="updateData('${key}', 'statedStaff', this.value)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'statedStaff', this.value, '${elementId}', '${location}')" />
                         </div>
                         <div class="input-group">
                             <label>Actual Staff</label>
                             <input type="number" value="${d.actualStaff || ''}" 
-                                onchange="updateData('${key}', 'actualStaff', this.value)" />
+                                onchange="updateDataWithTimeChecked('${key}', 'actualStaff', this.value, '${elementId}', '${location}')" />
                         </div>
                         <div class="input-group">
                             <label>Difference</label>
@@ -1320,8 +1465,14 @@
                     <div class="input-group">
                         <label>Notes</label>
                         <textarea rows="2" placeholder="Add notes..." 
-                            onchange="updateData('${key}', 'notes', this.value)">${d.notes || ''}</textarea>
+                            onchange="updateDataWithTimeChecked('${key}', 'notes', this.value, '${elementId}', '${location}')">${d.notes || ''}</textarea>
                     </div>
+                    ${d.timeChecked ? `
+                        <div class="time-checked-container">
+                            <span class="time-checked-label">⏰ Time Checked:</span>
+                            <span class="time-checked-value">${d.timeChecked}</span>
+                        </div>
+                    ` : '<div class="time-checked-container"><span class="time-checked-label">⏰ Time Checked:</span><span class="time-checked-value">Not yet checked</span></div>'}
                 </div>
             `;
         }
@@ -1334,29 +1485,26 @@
             updateStats();
         }
 
-        // Walls functions
-        function updateWallsStatus(areaId, status) {
+        // Walls functions with time checked
+        function updateWallsStatus(areaId, status, elementId, label) {
             const key = `${areaId}-walls`;
-            updateData(key, 'wallsStatus', status);
+            updateDataWithTimeChecked(key, 'wallsStatus', status, elementId, label);
         }
 
-        function updateWallsNotes(areaId, value) {
+        function updateWallsNotes(areaId, value, elementId, label) {
             const key = `${areaId}-walls`;
-            updateData(key, 'notes', value);
+            updateDataWithTimeChecked(key, 'notes', value, elementId, label);
         }
 
-        function updateToiletWalls(areaId, status) {
+        function updateToiletWalls(areaId, status, elementId, label) {
             const key = `${areaId}-toilet-walls`;
-            if (!data[key]) data[key] = {};
-            data[key].status = status;
-            localStorage.setItem('airportCleanlinessData', JSON.stringify(data));
-            updateStats();
+            updateDataWithTimeChecked(key, 'status', status, elementId, label);
         }
 
-        // FIA Counter functions
-        function updateFIAStatus(areaId, status) {
+        // FIA Counter functions with time checked
+        function updateFIAStatus(areaId, status, elementId, label) {
             const key = `${areaId}-fia-counters`;
-            updateData(key, 'status', status);
+            updateDataWithTimeChecked(key, 'status', status, elementId, label);
         }
 
         function updateFIALastChecked(areaId, value) {
@@ -1369,10 +1517,10 @@
             updateData(key, 'notes', value);
         }
 
-        // Conveyor Belt functions
-        function updateBeltStatus(areaId, status) {
+        // Conveyor Belt functions with time checked
+        function updateBeltStatus(areaId, status, elementId, label) {
             const key = `${areaId}-conveyor-belt`;
-            updateData(key, 'status', status);
+            updateDataWithTimeChecked(key, 'status', status, elementId, label);
         }
 
         function updateBeltLastCleaned(areaId, value) {
@@ -1385,14 +1533,14 @@
             updateData(key, 'notes', value);
         }
 
-        // Web Clean functions
-        function updateWebCleanStatus(areaId, status) {
+        // Web Clean functions with time checked
+        function updateWebCleanStatus(areaId, status, elementId, label) {
             const key = `${areaId}-web-clean`;
-            updateData(key, 'status', status);
+            updateDataWithTimeChecked(key, 'status', status, elementId, label);
         }
 
         function updateWebCleanDate(areaId, value) {
-            const key = `${area.id}-web-clean`;
+            const key = `${areaId}-web-clean`;
             updateData(key, 'lastCleaned', value);
         }
 
@@ -1401,10 +1549,10 @@
             updateData(key, 'notes', value);
         }
 
-        // Dustbins functions
-        function updateDustbins(areaId, field, value) {
+        // Dustbins functions with time checked
+        function updateDustbins(areaId, field, value, elementId, label) {
             const key = `${areaId}-dustbins`;
-            updateData(key, field, value);
+            updateDataWithTimeChecked(key, field, value, elementId, label);
         }
 
         function updateDustbinsLastEmptied(areaId, value) {
@@ -1509,7 +1657,7 @@
 
         // ==================== EXPORT FUNCTIONS ====================
         function exportCSV() {
-            let csv = 'Date,Shift,Time,Inspector,Area,Section,Type,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes,Walls Status,FIA Status,Belt Status,Web Status,Last Cleaned,Last Emptied\n';
+            let csv = 'Date,Shift,Time,Inspector,Area,Section,Type,Status,Score,Deep Clean,Routine Clean,Manpower,Material,Stated Staff,Actual Staff,Difference,Notes,Walls Status,FIA Status,Belt Status,Web Status,Last Cleaned,Last Emptied,Time Checked\n';
             const date = document.getElementById('date')?.value || '';
             const shift = document.getElementById('shift')?.value || '';
             const time = document.getElementById('time')?.value || '';
@@ -1521,49 +1669,49 @@
                     const key = `${area.id}-${loc.replace(/\s+/g, '_')}`;
                     const d = data[key] || {};
                     const diff = d.actualStaff && d.statedStaff ? parseInt(d.actualStaff) - parseInt(d.statedStaff) : '';
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","Location","${d.status || ''}","${d.score || ''}","${d.deepClean || false}","${d.routineClean || false}","${d.manpower || ''}","${d.material || ''}","${d.statedStaff || ''}","${d.actualStaff || ''}","${diff}","${d.notes || ''}","","","","",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","${loc}","Location","${d.status || ''}","${d.score || ''}","${d.deepClean || false}","${d.routineClean || false}","${d.manpower || ''}","${d.material || ''}","${d.statedStaff || ''}","${d.actualStaff || ''}","${diff}","${d.notes || ''}","","","","","","${d.timeChecked || ''}"\n`;
                 });
                 
                 // Export walls data
                 if (area.hasWalls) {
                     const wallsKey = `${area.id}-walls`;
                     const wallsData = data[wallsKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Walls","Walls","","","","","","","","","","${wallsData.wallsStatus || ''}","","","","",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Walls","Walls","","","","","","","","","","${wallsData.wallsStatus || ''}","","","","","","${wallsData.timeChecked || ''}"\n`;
                 }
                 
                 // Export toilet walls
                 if (area.hasToilets) {
                     const toiletWallsKey = `${area.id}-toilet-walls`;
                     const toiletWallsData = data[toiletWallsKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Toilet Walls","Walls","","","","","","","","","","${toiletWallsData.status || ''}","","","","",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Toilet Walls","Walls","","","","","","","","","","${toiletWallsData.status || ''}","","","","","","${toiletWallsData.timeChecked || ''}"\n`;
                 }
                 
                 // Export FIA counters
                 if (area.hasFIACounters) {
                     const fiaKey = `${area.id}-fia-counters`;
                     const fiaData = data[fiaKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","FIA Counters","FIA","${fiaData.status || ''}","","","","","","","","","","${fiaData.status || ''}","","","${fiaData.lastChecked || ''}",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","FIA Counters","FIA","${fiaData.status || ''}","","","","","","","","","","${fiaData.status || ''}","","","${fiaData.lastChecked || ''}","","${fiaData.timeChecked || ''}"\n`;
                 }
                 
                 // Export conveyor belts
                 if (area.hasConveyorBelt) {
                     const beltKey = `${area.id}-conveyor-belt`;
                     const beltData = data[beltKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Conveyor Belt","Belt","${beltData.status || ''}","","","","","","","","","","","${beltData.status || ''}","","${beltData.lastCleaned || ''}",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Conveyor Belt","Belt","${beltData.status || ''}","","","","","","","","","","","${beltData.status || ''}","","${beltData.lastCleaned || ''}","","${beltData.timeChecked || ''}"\n`;
                 }
                 
                 // Export web cleaning
                 if (area.hasWebClean) {
                     const webKey = `${area.id}-web-clean`;
                     const webData = data[webKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Web Cleaning","Web","${webData.status || ''}","","","","","","","","","","","","${webData.status || ''}","${webData.lastCleaned || ''}",""\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Web Cleaning","Web","${webData.status || ''}","","","","","","","","","","","","${webData.status || ''}","${webData.lastCleaned || ''}","","${webData.timeChecked || ''}"\n`;
                 }
                 
                 // Export dustbins data
                 if (area.hasDustbins) {
                     const dustbinsKey = `${area.id}-dustbins`;
                     const dustbinsData = data[dustbinsKey] || {};
-                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Dustbins","Dustbins","","","","","","","","","","","","","","","${dustbinsData.lastEmptied || ''}"\n`;
+                    csv += `"${date}","${shift}","${time}","${inspector}","${area.name}","Dustbins","Dustbins","","","","","","","","","","","","","","","${dustbinsData.lastEmptied || ''}","${dustbinsData.timeChecked || ''}"\n`;
                 }
             });
 
